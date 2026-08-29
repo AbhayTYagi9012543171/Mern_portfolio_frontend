@@ -1,7 +1,15 @@
 node_modules/
+<<<<<<< HEAD
 dist/
 .env
 .env.*
 !.env.example
 *.log
 *.tsbuildinfo 
+=======
+.env
+.env.local
+dist/
+build/
+*.log
+>>>>>>> 927984c (Update MERN portfolio project)
