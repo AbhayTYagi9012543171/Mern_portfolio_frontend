@@ -2,8 +2,8 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
+  type ReactNode,
 } from "react";
-
 import {
   FaEnvelope,
   FaGithub,
@@ -13,12 +13,18 @@ import {
   FaSpinner,
   FaCheckCircle,
   FaExclamationCircle,
+  FaArrowRight,
+  FaClock,
+  FaCode,
+  FaBriefcase,
+  FaComments,
 } from "react-icons/fa";
-
-import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
-
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import api from "../../services/api";
+
+/* =========================================================
+   TYPES
+========================================================= */
 
 interface ContactForm {
   name: string;
@@ -34,6 +40,24 @@ interface FormErrors {
   message?: string;
 }
 
+interface ContactInfoProps {
+  icon: ReactNode;
+  title: string;
+  value: string;
+  href?: string;
+  external?: boolean;
+}
+
+interface ContactCardProps {
+  icon: ReactNode;
+  title: string;
+  description: string;
+}
+
+/* =========================================================
+   CONSTANTS
+========================================================= */
+
 const initialForm: ContactForm = {
   name: "",
   email: "",
@@ -41,21 +65,81 @@ const initialForm: ContactForm = {
   message: "",
 };
 
+const MAX_MESSAGE_LENGTH = 1000;
+
+/* =========================================================
+   ANIMATION VARIANTS
+   Explicit Variants typing fixes Framer Motion TS errors.
+========================================================= */
+
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: "easeOut",
+    },
+  },
+};
+
+const slideLeft: Variants = {
+  hidden: {
+    opacity: 0,
+    x: -40,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.7,
+      ease: "easeOut",
+    },
+  },
+};
+
+const slideRight: Variants = {
+  hidden: {
+    opacity: 0,
+    x: 40,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.7,
+      ease: "easeOut",
+    },
+  },
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 const Contact = () => {
-  const [form, setForm] =
-    useState<ContactForm>(initialForm);
+  const [form, setForm] = useState<ContactForm>(initialForm);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
-  const [errors, setErrors] =
-    useState<FormErrors>({});
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [success, setSuccess] =
-    useState("");
-
-  const [error, setError] =
-    useState("");
+  /* =======================================================
+     VALIDATION
+  ======================================================= */
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -66,38 +150,33 @@ const Contact = () => {
     const message = form.message.trim();
 
     if (!name) {
-      newErrors.name = "Name is required.";
+      newErrors.name = "Please enter your name.";
     } else if (name.length < 2) {
-      newErrors.name =
-        "Name must be at least 2 characters.";
+      newErrors.name = "Name must be at least 2 characters.";
+    } else if (name.length > 80) {
+      newErrors.name = "Name cannot exceed 80 characters.";
     }
 
     if (!email) {
-      newErrors.email = "Email is required.";
-    } else if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-    ) {
-      newErrors.email =
-        "Please enter a valid email address.";
+      newErrors.email = "Please enter your email address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email address.";
     }
 
     if (!subject) {
-      newErrors.subject =
-        "Subject is required.";
+      newErrors.subject = "Please enter a subject.";
     } else if (subject.length < 3) {
-      newErrors.subject =
-        "Subject must be at least 3 characters.";
+      newErrors.subject = "Subject must be at least 3 characters.";
+    } else if (subject.length > 150) {
+      newErrors.subject = "Subject cannot exceed 150 characters.";
     }
 
     if (!message) {
-      newErrors.message =
-        "Message is required.";
+      newErrors.message = "Please enter your message.";
     } else if (message.length < 10) {
-      newErrors.message =
-        "Message must be at least 10 characters.";
-    } else if (message.length > 1000) {
-      newErrors.message =
-        "Message cannot exceed 1000 characters.";
+      newErrors.message = "Message must be at least 10 characters.";
+    } else if (message.length > MAX_MESSAGE_LENGTH) {
+      newErrors.message = `Message cannot exceed ${MAX_MESSAGE_LENGTH} characters.`;
     }
 
     setErrors(newErrors);
@@ -105,10 +184,12 @@ const Contact = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  /* =======================================================
+     INPUT CHANGE
+  ======================================================= */
+
   const handleChange = (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
-    >
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
 
@@ -126,32 +207,29 @@ const Contact = () => {
     setError("");
   };
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
+  /* =======================================================
+     SUBMIT
+  ======================================================= */
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setSuccess("");
     setError("");
 
-    const isValid = validateForm();
-
-    if (!isValid) {
+    if (!validateForm()) {
       return;
     }
 
     try {
       setLoading(true);
 
-      const response = await api.post(
-        "/contact",
-        {
-          name: form.name.trim(),
-          email: form.email.trim(),
-          subject: form.subject.trim(),
-          message: form.message.trim(),
-        }
-      );
+      const response = await api.post("/contact", {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        subject: form.subject.trim(),
+        message: form.message.trim(),
+      });
 
       if (response.data?.success) {
         setSuccess(
@@ -164,27 +242,36 @@ const Contact = () => {
 
         window.setTimeout(() => {
           setSuccess("");
-        }, 6000);
+        }, 7000);
       } else {
         setError(
           response.data?.message ||
-            "Unable to send your message."
+            "Unable to send your message. Please try again."
         );
       }
     } catch (err: unknown) {
-      console.error(
-        "Contact form error:",
-        err
-      );
+      console.error("Contact form error:", err);
 
-      if (axios.isAxiosError(err)) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err
+      ) {
+        const axiosError = err as {
+          response?: {
+            data?: {
+              message?: string;
+            };
+          };
+        };
+
         setError(
-          err.response?.data?.message ||
+          axiosError.response?.data?.message ||
             "Unable to send your message. Please try again."
         );
       } else {
         setError(
-          "Something went wrong. Please try again."
+          "Something went wrong. Please check your connection and try again."
         );
       }
     } finally {
@@ -192,96 +279,150 @@ const Contact = () => {
     }
   };
 
+  /* =======================================================
+     RENDER
+  ======================================================= */
+
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-slate-900 px-6 py-24 sm:py-32"
+      aria-labelledby="contact-heading"
+      className="relative overflow-hidden bg-slate-950 px-6 py-24 sm:py-32"
     >
-      {/* Background Glow */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl" />
+      {/* ===================================================
+          BACKGROUND
+      =================================================== */}
 
-      <div className="pointer-events-none absolute -left-40 bottom-0 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[120px]" />
 
-      <div className="pointer-events-none absolute -right-40 top-1/3 h-80 w-80 rounded-full bg-purple-500/10 blur-3xl" />
+        <div className="absolute -left-48 bottom-0 h-[400px] w-[400px] rounded-full bg-blue-500/10 blur-[120px]" />
+
+        <div className="absolute -right-48 top-1/3 h-[400px] w-[400px] rounded-full bg-purple-500/10 blur-[120px]" />
+
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px)",
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </div>
 
       <div className="relative mx-auto max-w-7xl">
 
-        {/* Header */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
+
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
           viewport={{
             once: true,
+            amount: 0.2,
           }}
-          transition={{
-            duration: 0.6,
-          }}
-          className="mx-auto mb-14 max-w-3xl text-center"
+          className="mx-auto mb-16 max-w-3xl text-center"
         >
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400">
-            Get In Touch
-          </p>
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
+            </span>
 
-          <h2 className="text-4xl font-bold text-white sm:text-5xl">
-            Let's{" "}
-            <span className="text-cyan-400">
-              Work Together
+            Get In Touch
+          </div>
+
+          <h2
+            id="contact-heading"
+            className="text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl"
+          >
+            Let's Build Something{" "}
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Great Together
             </span>
           </h2>
 
-          <p className="mt-5 leading-8 text-slate-400">
-            Have a project, internship opportunity,
-            freelance requirement, or just want to
-            say hello? Send me a message.
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">
+            Have a project idea, internship opportunity, freelance
+            requirement, or simply want to connect? I'd love to hear
+            from you.
           </p>
         </motion.div>
 
+        {/* =================================================
+            MAIN GRID
+        ================================================= */}
+
         <div className="grid gap-8 lg:grid-cols-5">
 
-          {/* Contact Information */}
+          {/* =================================================
+              LEFT SIDE
+          ================================================= */}
+
           <motion.div
-            initial={{
-              opacity: 0,
-              x: -40,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
+            variants={slideLeft}
+            initial="hidden"
+            whileInView="visible"
             viewport={{
               once: true,
-            }}
-            transition={{
-              duration: 0.6,
+              amount: 0.15,
             }}
             className="lg:col-span-2"
           >
-            <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl sm:p-8">
+            <div className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-8">
 
-              <div className="mb-8">
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400">
-                  <FaEnvelope size={20} />
+              {/* Card glow */}
+
+              <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
+
+              {/* Availability */}
+
+              <div className="relative mb-8 flex items-center justify-between rounded-2xl border border-emerald-400/10 bg-emerald-400/5 px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-50" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" />
+                  </span>
+
+                  <span className="text-sm font-medium text-emerald-300">
+                    Available for opportunities
+                  </span>
+                </div>
+
+                <FaClock className="text-emerald-400" />
+              </div>
+
+              {/* Intro */}
+
+              <div className="relative">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-400 shadow-lg shadow-cyan-500/10">
+                  <FaComments size={23} />
                 </div>
 
                 <h3 className="text-2xl font-bold text-white">
-                  Contact Information
+                  Let's Connect
                 </h3>
 
                 <p className="mt-4 leading-7 text-slate-400">
-                  I'm open to internship opportunities,
-                  freelance projects, and full-time
-                  MERN Stack Developer roles.
+                  I'm open to meaningful opportunities where I can
+                  contribute, learn, and build impactful software.
                 </p>
               </div>
 
-              <div className="space-y-5">
+              {/* Contact information */}
 
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{
+                  once: true,
+                }}
+                className="relative mt-8 space-y-4"
+              >
                 <ContactInfo
                   icon={<FaEnvelope />}
                   title="Email"
@@ -292,8 +433,9 @@ const Contact = () => {
                 <ContactInfo
                   icon={<FaLinkedin />}
                   title="LinkedIn"
-                  value="LinkedIn Profile"
+                  value="Abhay Tyagi"
                   href="https://www.linkedin.com/in/abhay-tyagi-13b592323/"
+                  external
                 />
 
                 <ContactInfo
@@ -301,6 +443,7 @@ const Contact = () => {
                   title="GitHub"
                   value="AbhayTYagi9012543171"
                   href="https://github.com/AbhayTYagi9012543171"
+                  external
                 />
 
                 <ContactInfo
@@ -308,70 +451,87 @@ const Contact = () => {
                   title="Location"
                   value="Ghaziabad, Uttar Pradesh, India"
                 />
+              </motion.div>
 
+              {/* Quick info */}
+
+              <div className="relative mt-8 grid grid-cols-2 gap-3">
+                <ContactCard
+                  icon={<FaCode />}
+                  title="MERN Stack"
+                  description="Modern web development"
+                />
+
+                <ContactCard
+                  icon={<FaBriefcase />}
+                  title="Open to Work"
+                  description="Internships & roles"
+                />
               </div>
 
-              {/* Social Links */}
-              <div className="mt-10 border-t border-white/10 pt-7">
+              {/* Social links */}
 
-                <p className="mb-4 text-sm font-semibold text-slate-300">
+              <div className="relative mt-8 border-t border-white/10 pt-7">
+                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                   Find me online
                 </p>
 
                 <div className="flex gap-3">
-
-                  <a
+                  <SocialLink
                     href="https://github.com/AbhayTYagi9012543171"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:-translate-y-1 hover:border-cyan-400/30 hover:text-cyan-400"
-                    aria-label="GitHub"
-                  >
-                    <FaGithub />
-                  </a>
+                    label="GitHub"
+                    icon={<FaGithub />}
+                  />
 
-                  <a
+                  <SocialLink
                     href="https://www.linkedin.com/in/abhay-tyagi-13b592323/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:-translate-y-1 hover:border-cyan-400/30 hover:text-cyan-400"
-                    aria-label="LinkedIn"
-                  >
-                    <FaLinkedin />
-                  </a>
-
+                    label="LinkedIn"
+                    icon={<FaLinkedin />}
+                  />
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Contact Form */}
+          {/* =================================================
+              RIGHT SIDE FORM
+          ================================================= */}
+
           <motion.div
-            initial={{
-              opacity: 0,
-              x: 40,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
+            variants={slideRight}
+            initial="hidden"
+            whileInView="visible"
             viewport={{
               once: true,
-            }}
-            transition={{
-              duration: 0.6,
+              amount: 0.15,
             }}
             className="lg:col-span-3"
           >
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="rounded-3xl border border-white/10 bg-white/[0.03] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-8"
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9"
             >
+              {/* Form header */}
+
+              <div className="mb-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">
+                  Send a Message
+                </p>
+
+                <h3 className="mt-2 text-2xl font-bold text-white">
+                  Tell me about your idea
+                </h3>
+
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  Fill out the form and I'll get back to you as soon
+                  as possible.
+                </p>
+              </div>
 
               {/* Name + Email */}
-              <div className="grid gap-5 sm:grid-cols-2">
 
+              <div className="grid gap-5 sm:grid-cols-2">
                 <InputField
                   label="Name"
                   name="name"
@@ -380,6 +540,7 @@ const Contact = () => {
                   value={form.name}
                   error={errors.name}
                   onChange={handleChange}
+                  required
                 />
 
                 <InputField
@@ -390,152 +551,174 @@ const Contact = () => {
                   value={form.email}
                   error={errors.email}
                   onChange={handleChange}
+                  required
                 />
-
               </div>
 
               {/* Subject */}
+
               <div className="mt-5">
                 <InputField
                   label="Subject"
                   name="subject"
                   type="text"
-                  placeholder="Project / Job Opportunity"
+                  placeholder="Project, internship, freelance opportunity..."
                   value={form.subject}
                   error={errors.subject}
                   onChange={handleChange}
+                  required
                 />
               </div>
 
               {/* Message */}
-              <div className="mt-5">
 
+              <div className="mt-5">
                 <div className="mb-2 flex items-center justify-between">
                   <label
                     htmlFor="message"
                     className="block text-sm font-medium text-slate-300"
                   >
                     Message
+                    <span className="ml-1 text-cyan-400">*</span>
                   </label>
 
                   <span
                     className={`text-xs ${
                       form.message.length > 900
-                        ? "text-red-400"
+                        ? "text-amber-400"
                         : "text-slate-500"
                     }`}
                   >
-                    {form.message.length}/1000
+                    {form.message.length}/{MAX_MESSAGE_LENGTH}
                   </span>
                 </div>
 
                 <textarea
                   id="message"
                   name="message"
-                  rows={6}
-                  maxLength={1000}
-                  placeholder="Tell me about your project or opportunity..."
+                  rows={7}
+                  maxLength={MAX_MESSAGE_LENGTH}
+                  placeholder="Tell me about your project, goals, requirements, or opportunity..."
                   value={form.message}
                   onChange={handleChange}
-                  aria-invalid={Boolean(
+                  aria-invalid={Boolean(errors.message)}
+                  aria-describedby={
                     errors.message
-                  )}
-                  className={`w-full resize-none rounded-xl border bg-slate-950/60 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:ring-1 ${
+                      ? "message-error"
+                      : undefined
+                  }
+                  className={`w-full resize-none rounded-2xl border bg-slate-950/60 px-4 py-3.5 text-sm leading-7 text-white outline-none transition duration-300 placeholder:text-slate-600 focus:ring-2 ${
                     errors.message
-                      ? "border-red-400/50 focus:border-red-400 focus:ring-red-400/30"
-                      : "border-white/10 focus:border-cyan-400/50 focus:ring-cyan-400/30"
+                      ? "border-red-400/50 focus:border-red-400 focus:ring-red-400/10"
+                      : "border-white/10 focus:border-cyan-400/50 focus:ring-cyan-400/10"
                   }`}
                 />
 
                 {errors.message && (
-                  <p className="mt-2 flex items-center gap-2 text-xs text-red-400">
+                  <p
+                    id="message-error"
+                    className="mt-2 flex items-center gap-2 text-xs text-red-400"
+                  >
                     <FaExclamationCircle />
                     {errors.message}
                   </p>
                 )}
-
               </div>
 
-              {/* Success / Error */}
-              <AnimatePresence mode="wait">
+              {/* =================================================
+                  STATUS MESSAGES
+              ================================================= */}
 
-                {success && (
-                  <motion.div
-                    key="success"
-                    initial={{
-                      opacity: 0,
-                      y: 10,
-                      scale: 0.98,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      y: -10,
-                    }}
-                    className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-4 text-sm text-emerald-300"
-                  >
-                    <FaCheckCircle
-                      className="mt-0.5 shrink-0"
-                      size={18}
-                    />
+              <div
+                className="min-h-[1px]"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <AnimatePresence mode="wait">
+                  {success && (
+                    <motion.div
+                      key="success"
+                      initial={{
+                        opacity: 0,
+                        y: 10,
+                        scale: 0.98,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -10,
+                      }}
+                      className="mt-5 flex items-start gap-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-4"
+                    >
+                      <FaCheckCircle
+                        className="mt-0.5 shrink-0 text-emerald-400"
+                        size={18}
+                      />
 
-                    <div>
-                      <p className="font-semibold">
-                        Message Sent!
-                      </p>
+                      <div>
+                        <p className="font-semibold text-emerald-300">
+                          Message Sent Successfully
+                        </p>
 
-                      <p className="mt-1 text-emerald-300/80">
-                        {success}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
+                        <p className="mt-1 text-sm text-emerald-300/75">
+                          {success}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
 
-                {error && (
-                  <motion.div
-                    key="error"
-                    initial={{
-                      opacity: 0,
-                      x: -10,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      x: 10,
-                    }}
-                    className="mt-5 flex items-start gap-3 rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-4 text-sm text-red-300"
-                  >
-                    <FaExclamationCircle
-                      className="mt-0.5 shrink-0"
-                      size={18}
-                    />
+                  {error && (
+                    <motion.div
+                      key="error"
+                      initial={{
+                        opacity: 0,
+                        y: 10,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -10,
+                      }}
+                      className="mt-5 flex items-start gap-3 rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-4"
+                    >
+                      <FaExclamationCircle
+                        className="mt-0.5 shrink-0 text-red-400"
+                        size={18}
+                      />
 
-                    <div>
-                      <p className="font-semibold">
-                        Unable to Send
-                      </p>
+                      <div>
+                        <p className="font-semibold text-red-300">
+                          Unable to Send Message
+                        </p>
 
-                      <p className="mt-1 text-red-300/80">
-                        {error}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
+                        <p className="mt-1 text-sm text-red-300/75">
+                          {error}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-              </AnimatePresence>
+              {/* Submit button */}
 
-              {/* Submit */}
-              <button
+              <motion.button
+                whileHover={{
+                  y: -2,
+                }}
+                whileTap={{
+                  scale: 0.98,
+                }}
                 type="submit"
                 disabled={loading}
-                className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 px-6 py-3.5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-400/10 transition hover:-translate-y-0.5 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+                className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 px-6 py-4 text-sm font-bold text-slate-950 shadow-xl shadow-cyan-500/10 transition disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -544,35 +727,72 @@ const Contact = () => {
                   </>
                 ) : (
                   <>
-                    <FaPaperPlane className="transition-transform group-hover:translate-x-1" />
+                    <FaPaperPlane className="transition-transform duration-300 group-hover:translate-x-1" />
                     Send Message
+                    <FaArrowRight className="text-xs opacity-60 transition-transform duration-300 group-hover:translate-x-1" />
                   </>
                 )}
-              </button>
+              </motion.button>
 
-              <p className="mt-4 text-center text-xs text-slate-600">
-                Your information is only used to respond
-                to your message.
-              </p>
+              {/* Privacy */}
 
+              <div className="mt-5 flex items-center justify-center gap-2 text-center text-xs text-slate-600">
+                <FaCheckCircle className="text-emerald-500/60" />
+
+                <span>
+                  Your information is only used to respond to your
+                  message.
+                </span>
+              </div>
             </form>
           </motion.div>
         </div>
+
+        {/* =================================================
+            BOTTOM CTA
+        ================================================= */}
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
+          className="mt-8 rounded-3xl border border-cyan-400/10 bg-gradient-to-r from-cyan-400/[0.06] via-blue-400/[0.04] to-purple-400/[0.06] p-6 text-center sm:p-8"
+        >
+          <p className="text-sm text-slate-400">
+            Prefer a quick conversation?
+          </p>
+
+          <a
+            href="mailto:tyagiabhay2004@gmail.com"
+            className="group mt-2 inline-flex items-center gap-2 text-lg font-semibold text-white transition hover:text-cyan-400"
+          >
+            Drop me an email
+
+            <FaArrowRight className="text-sm transition-transform group-hover:translate-x-1" />
+          </a>
+        </motion.div>
       </div>
     </section>
   );
 };
 
+/* =========================================================
+   INPUT FIELD
+========================================================= */
+
 interface InputFieldProps {
   label: string;
-  name: string;
+  name: keyof ContactForm;
   type: string;
   placeholder: string;
   value: string;
   error?: string;
-  onChange: (
-    event: ChangeEvent<HTMLInputElement>
-  ) => void;
+  required?: boolean;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputField = ({
@@ -582,6 +802,7 @@ const InputField = ({
   placeholder,
   value,
   error,
+  required,
   onChange,
 }: InputFieldProps) => {
   return (
@@ -591,6 +812,10 @@ const InputField = ({
         className="mb-2 block text-sm font-medium text-slate-300"
       >
         {label}
+
+        {required && (
+          <span className="ml-1 text-cyan-400">*</span>
+        )}
       </label>
 
       <input
@@ -600,16 +825,29 @@ const InputField = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        autoComplete={
+          name === "email"
+            ? "email"
+            : name === "name"
+              ? "name"
+              : undefined
+        }
         aria-invalid={Boolean(error)}
-        className={`w-full rounded-xl border bg-slate-950/60 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:ring-1 ${
+        aria-describedby={
+          error ? `${name}-error` : undefined
+        }
+        className={`w-full rounded-2xl border bg-slate-950/60 px-4 py-3.5 text-sm text-white outline-none transition duration-300 placeholder:text-slate-600 focus:ring-2 ${
           error
-            ? "border-red-400/50 focus:border-red-400 focus:ring-red-400/30"
-            : "border-white/10 focus:border-cyan-400/50 focus:ring-cyan-400/30"
+            ? "border-red-400/50 focus:border-red-400 focus:ring-red-400/10"
+            : "border-white/10 focus:border-cyan-400/50 focus:ring-cyan-400/10"
         }`}
       />
 
       {error && (
-        <p className="mt-2 flex items-center gap-2 text-xs text-red-400">
+        <p
+          id={`${name}-error`}
+          className="mt-2 flex items-center gap-2 text-xs text-red-400"
+        >
           <FaExclamationCircle />
           {error}
         </p>
@@ -618,37 +856,43 @@ const InputField = ({
   );
 };
 
-interface ContactInfoProps {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  href?: string;
-}
+/* =========================================================
+   CONTACT INFO
+========================================================= */
 
 const ContactInfo = ({
   icon,
   title,
   value,
   href,
+  external = false,
 }: ContactInfoProps) => {
   const content = (
-    <div className="flex items-center gap-4">
-
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-400">
+    <motion.div
+      variants={fadeUp}
+      whileHover={{
+        x: 4,
+      }}
+      className="group flex items-center gap-4 rounded-2xl border border-white/5 bg-white/[0.02] p-3 transition hover:border-cyan-400/20 hover:bg-cyan-400/[0.03]"
+    >
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-400 transition duration-300 group-hover:scale-105 group-hover:bg-cyan-400/15">
         {icon}
       </div>
 
-      <div>
-        <p className="text-xs uppercase tracking-wider text-slate-500">
+      <div className="min-w-0">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
           {title}
         </p>
 
-        <p className="mt-1 text-sm text-slate-300">
+        <p className="mt-1 truncate text-sm text-slate-300 group-hover:text-white">
           {value}
         </p>
       </div>
 
-    </div>
+      {href && (
+        <FaArrowRight className="ml-auto shrink-0 text-xs text-slate-700 transition group-hover:translate-x-1 group-hover:text-cyan-400" />
+      )}
+    </motion.div>
   );
 
   if (!href) {
@@ -658,20 +902,79 @@ const ContactInfo = ({
   return (
     <a
       href={href}
-      target={
-        href.startsWith("http")
-          ? "_blank"
-          : undefined
-      }
-      rel={
-        href.startsWith("http")
-          ? "noreferrer"
-          : undefined
-      }
-      className="block transition hover:opacity-80"
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="block"
     >
       {content}
     </a>
+  );
+};
+
+/* =========================================================
+   CONTACT CARD
+========================================================= */
+
+const ContactCard = ({
+  icon,
+  title,
+  description,
+}: ContactCardProps) => {
+  return (
+    <motion.div
+      variants={fadeUp}
+      whileHover={{
+        y: -3,
+      }}
+      className="rounded-2xl border border-white/5 bg-white/[0.02] p-4"
+    >
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-400/10 text-cyan-400">
+        {icon}
+      </div>
+
+      <p className="text-sm font-semibold text-white">
+        {title}
+      </p>
+
+      <p className="mt-1 text-xs leading-5 text-slate-500">
+        {description}
+      </p>
+    </motion.div>
+  );
+};
+
+/* =========================================================
+   SOCIAL LINK
+========================================================= */
+
+interface SocialLinkProps {
+  href: string;
+  label: string;
+  icon: ReactNode;
+}
+
+const SocialLink = ({
+  href,
+  label,
+  icon,
+}: SocialLinkProps) => {
+  return (
+    <motion.a
+      whileHover={{
+        y: -4,
+        scale: 1.04,
+      }}
+      whileTap={{
+        scale: 0.96,
+      }}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-400"
+    >
+      {icon}
+    </motion.a>
   );
 };
 
