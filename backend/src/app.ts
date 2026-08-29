@@ -21,15 +21,7 @@ const app = express();
 
 /*
 |--------------------------------------------------------------------------
-| Security
-|--------------------------------------------------------------------------
-*/
-
-app.use(helmet());
-
-/*
-|--------------------------------------------------------------------------
-| CORS
+| CORS Configuration
 |--------------------------------------------------------------------------
 */
 
@@ -38,11 +30,16 @@ const allowedOrigins = [
   "https://mern-portfolio-frontend-btjy.onrender.com",
 ];
 
+// Add CLIENT_URL from environment if available
+if (process.env.CLIENT_URL) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests without an Origin header
-      // such as Postman/server-to-server requests
+      // Allow requests without an Origin
+      // Example: Postman, server-to-server requests
       if (!origin) {
         return callback(null, true);
       }
@@ -51,7 +48,7 @@ app.use(
         return callback(null, true);
       }
 
-      console.log("❌ CORS blocked:", origin);
+      console.log(`❌ CORS blocked origin: ${origin}`);
 
       return callback(
         new Error("Not allowed by CORS")
@@ -59,6 +56,35 @@ app.use(
     },
 
     credentials: true,
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
+  })
+);
+
+/*
+|--------------------------------------------------------------------------
+| Security
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
   })
 );
 
@@ -68,11 +94,16 @@ app.use(
 |--------------------------------------------------------------------------
 */
 
-app.use(express.json());
+app.use(
+  express.json({
+    limit: "10mb",
+  })
+);
 
 app.use(
   express.urlencoded({
     extended: true,
+    limit: "10mb",
   })
 );
 
@@ -86,13 +117,11 @@ app.use(compression());
 
 /*
 |--------------------------------------------------------------------------
-| Logger
+| Morgan Logger
 |--------------------------------------------------------------------------
 */
 
-if (
-  process.env.NODE_ENV === "development"
-) {
+if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
@@ -104,7 +133,12 @@ if (
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
+
   max: 100,
+
+  standardHeaders: true,
+
+  legacyHeaders: false,
 
   message: {
     success: false,
@@ -117,15 +151,14 @@ app.use("/api", limiter);
 
 /*
 |--------------------------------------------------------------------------
-| Root
+| Root Route
 |--------------------------------------------------------------------------
 */
 
 app.get("/", (_req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
-    message:
-      "MERN Portfolio API is running",
+    message: "MERN Portfolio API is running",
   });
 });
 
@@ -136,9 +169,11 @@ app.get("/", (_req, res) => {
 */
 
 app.get("/api/health", (_req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Server is healthy",
+    environment:
+      process.env.NODE_ENV || "development",
   });
 });
 
@@ -165,11 +200,17 @@ app.use(
 
 /*
 |--------------------------------------------------------------------------
-| Error Handling
+| 404 Handler
 |--------------------------------------------------------------------------
 */
 
 app.use(notFoundHandler);
+
+/*
+|--------------------------------------------------------------------------
+| Global Error Handler
+|--------------------------------------------------------------------------
+*/
 
 app.use(errorHandler);
 
