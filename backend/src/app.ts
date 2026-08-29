@@ -19,25 +19,76 @@ import {
 
 const app = express();
 
+/*
+|--------------------------------------------------------------------------
+| Security
+|--------------------------------------------------------------------------
+*/
+
 app.use(helmet());
+
+/*
+|--------------------------------------------------------------------------
+| CORS
+|--------------------------------------------------------------------------
+*/
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://mern-portfolio-frontend-btjy.onrender.com",
+];
 
 app.use(
   cors({
-    origin:
-      process.env.CLIENT_URL ||
-      "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header
+      // such as Postman/server-to-server requests
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("❌ CORS blocked:", origin);
+
+      return callback(
+        new Error("Not allowed by CORS")
+      );
+    },
+
     credentials: true,
   })
 );
 
+/*
+|--------------------------------------------------------------------------
+| Body Parser
+|--------------------------------------------------------------------------
+*/
+
 app.use(express.json());
+
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
 
+/*
+|--------------------------------------------------------------------------
+| Compression
+|--------------------------------------------------------------------------
+*/
+
 app.use(compression());
+
+/*
+|--------------------------------------------------------------------------
+| Logger
+|--------------------------------------------------------------------------
+*/
 
 if (
   process.env.NODE_ENV === "development"
@@ -45,9 +96,16 @@ if (
   app.use(morgan("dev"));
 }
 
+/*
+|--------------------------------------------------------------------------
+| Rate Limiter
+|--------------------------------------------------------------------------
+*/
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
+
   message: {
     success: false,
     message:
@@ -57,6 +115,12 @@ const limiter = rateLimit({
 
 app.use("/api", limiter);
 
+/*
+|--------------------------------------------------------------------------
+| Root
+|--------------------------------------------------------------------------
+*/
+
 app.get("/", (_req, res) => {
   res.json({
     success: true,
@@ -64,6 +128,12 @@ app.get("/", (_req, res) => {
       "MERN Portfolio API is running",
   });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Health Check
+|--------------------------------------------------------------------------
+*/
 
 app.get("/api/health", (_req, res) => {
   res.json({
