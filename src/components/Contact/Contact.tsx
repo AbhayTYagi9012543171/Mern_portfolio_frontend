@@ -54,6 +54,23 @@ interface ContactCardProps {
   description: string;
 }
 
+interface InputFieldProps {
+  label: string;
+  name: keyof ContactForm;
+  type: string;
+  placeholder: string;
+  value: string;
+  error?: string;
+  required?: boolean;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface SocialLinkProps {
+  href: string;
+  label: string;
+  icon: ReactNode;
+}
+
 /* =========================================================
    CONSTANTS
 ========================================================= */
@@ -69,7 +86,6 @@ const MAX_MESSAGE_LENGTH = 1000;
 
 /* =========================================================
    ANIMATION VARIANTS
-   Explicit Variants typing fixes Framer Motion TS errors.
 ========================================================= */
 
 const fadeUp: Variants = {
@@ -289,11 +305,12 @@ const Contact = () => {
       aria-labelledby="contact-heading"
       className="relative overflow-hidden bg-slate-950 px-6 py-24 sm:py-32"
     >
-      {/* ===================================================
-          BACKGROUND
-      =================================================== */}
+      {/* Background */}
 
-      <div className="pointer-events-none absolute inset-0">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+      >
         <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[120px]" />
 
         <div className="absolute -left-48 bottom-0 h-[400px] w-[400px] rounded-full bg-blue-500/10 blur-[120px]" />
@@ -311,10 +328,7 @@ const Contact = () => {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-
-        {/* =================================================
-            HEADER
-        ================================================= */}
+        {/* Header */}
 
         <motion.div
           variants={fadeUp}
@@ -352,15 +366,10 @@ const Contact = () => {
           </p>
         </motion.div>
 
-        {/* =================================================
-            MAIN GRID
-        ================================================= */}
+        {/* Main Grid */}
 
         <div className="grid gap-8 lg:grid-cols-5">
-
-          {/* =================================================
-              LEFT SIDE
-          ================================================= */}
+          {/* Left Side */}
 
           <motion.div
             variants={slideLeft}
@@ -373,8 +382,7 @@ const Contact = () => {
             className="lg:col-span-2"
           >
             <div className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-8">
-
-              {/* Card glow */}
+              {/* Glow */}
 
               <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -412,7 +420,7 @@ const Contact = () => {
                 </p>
               </div>
 
-              {/* Contact information */}
+              {/* Contact Information */}
 
               <motion.div
                 variants={staggerContainer}
@@ -453,7 +461,7 @@ const Contact = () => {
                 />
               </motion.div>
 
-              {/* Quick info */}
+              {/* Quick Info */}
 
               <div className="relative mt-8 grid grid-cols-2 gap-3">
                 <ContactCard
@@ -469,7 +477,7 @@ const Contact = () => {
                 />
               </div>
 
-              {/* Social links */}
+              {/* Social Links */}
 
               <div className="relative mt-8 border-t border-white/10 pt-7">
                 <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -493,9 +501,7 @@ const Contact = () => {
             </div>
           </motion.div>
 
-          {/* =================================================
-              RIGHT SIDE FORM
-          ================================================= */}
+          {/* Right Side Form */}
 
           <motion.div
             variants={slideRight}
@@ -512,7 +518,7 @@ const Contact = () => {
               noValidate
               className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9"
             >
-              {/* Form header */}
+              {/* Form Header */}
 
               <div className="mb-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">
@@ -603,9 +609,7 @@ const Contact = () => {
                   onChange={handleChange}
                   aria-invalid={Boolean(errors.message)}
                   aria-describedby={
-                    errors.message
-                      ? "message-error"
-                      : undefined
+                    errors.message ? "message-error" : undefined
                   }
                   className={`w-full resize-none rounded-2xl border bg-slate-950/60 px-4 py-3.5 text-sm leading-7 text-white outline-none transition duration-300 placeholder:text-slate-600 focus:ring-2 ${
                     errors.message
@@ -625,9 +629,7 @@ const Contact = () => {
                 )}
               </div>
 
-              {/* =================================================
-                  STATUS MESSAGES
-              ================================================= */}
+              {/* Status Messages */}
 
               <div
                 className="min-h-[1px]"
@@ -707,7 +709,7 @@ const Contact = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Submit button */}
+              {/* Submit Button */}
 
               <motion.button
                 whileHover={{
@@ -748,9 +750,7 @@ const Contact = () => {
           </motion.div>
         </div>
 
-        {/* =================================================
-            BOTTOM CTA
-        ================================================= */}
+        {/* Bottom CTA */}
 
         <motion.div
           variants={fadeUp}
@@ -783,17 +783,6 @@ const Contact = () => {
 /* =========================================================
    INPUT FIELD
 ========================================================= */
-
-interface InputFieldProps {
-  label: string;
-  name: keyof ContactForm;
-  type: string;
-  placeholder: string;
-  value: string;
-  error?: string;
-  required?: boolean;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-}
 
 const InputField = ({
   label,
@@ -833,9 +822,7 @@ const InputField = ({
               : undefined
         }
         aria-invalid={Boolean(error)}
-        aria-describedby={
-          error ? `${name}-error` : undefined
-        }
+        aria-describedby={error ? `${name}-error` : undefined}
         className={`w-full rounded-2xl border bg-slate-950/60 px-4 py-3.5 text-sm text-white outline-none transition duration-300 placeholder:text-slate-600 focus:ring-2 ${
           error
             ? "border-red-400/50 focus:border-red-400 focus:ring-red-400/10"
@@ -946,12 +933,6 @@ const ContactCard = ({
 /* =========================================================
    SOCIAL LINK
 ========================================================= */
-
-interface SocialLinkProps {
-  href: string;
-  label: string;
-  icon: ReactNode;
-}
 
 const SocialLink = ({
   href,
