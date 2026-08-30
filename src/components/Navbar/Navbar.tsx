@@ -69,10 +69,10 @@ const Navbar = () => {
   const [hidden, setHidden] = useState(false);
 
   /*
-  |--------------------------------------------------------------------------
-  | Scroll behavior
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Scroll behavior
+   * ---------------------------------------------------------
+   */
 
   useEffect(() => {
     let previousScrollY = window.scrollY;
@@ -80,11 +80,14 @@ const Navbar = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      setScrolled(currentScrollY > 24);
+      setScrolled(currentScrollY > 20);
 
       if (!isOpen) {
+        const scrollingDown =
+          currentScrollY > previousScrollY;
+
         if (
-          currentScrollY > previousScrollY &&
+          scrollingDown &&
           currentScrollY > 180
         ) {
           setHidden(true);
@@ -113,10 +116,10 @@ const Navbar = () => {
   }, [isOpen]);
 
   /*
-  |--------------------------------------------------------------------------
-  | Active section observer
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Active section observer
+   * ---------------------------------------------------------
+   */
 
   useEffect(() => {
     const sectionIds = navItems.map((item) =>
@@ -132,14 +135,17 @@ const Navbar = () => {
           section !== null
       );
 
-    if (!sections.length) return;
+    if (sections.length === 0) {
+      return;
+    }
 
     const observer =
       new IntersectionObserver(
         (entries) => {
           const visibleSections = entries
             .filter(
-              (entry) => entry.isIntersecting
+              (entry) =>
+                entry.isIntersecting
             )
             .sort(
               (a, b) =>
@@ -147,7 +153,9 @@ const Navbar = () => {
                 a.intersectionRatio
             );
 
-          if (visibleSections.length) {
+          if (
+            visibleSections.length > 0
+          ) {
             setActiveSection(
               visibleSections[0].target.id
             );
@@ -156,7 +164,7 @@ const Navbar = () => {
         {
           root: null,
           rootMargin:
-            "-18% 0px -65% 0px",
+            "-20% 0px -65% 0px",
           threshold: [
             0.05,
             0.1,
@@ -166,18 +174,20 @@ const Navbar = () => {
         }
       );
 
-    sections.forEach((section) =>
-      observer.observe(section)
-    );
+    sections.forEach((section) => {
+      observer.observe(section);
+    });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   /*
-  |--------------------------------------------------------------------------
-  | Smooth navigation
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Smooth navigation
+   * ---------------------------------------------------------
+   */
 
   const handleNavigation = (
     event: MouseEvent<HTMLAnchorElement>,
@@ -190,13 +200,18 @@ const Navbar = () => {
     const target =
       document.getElementById(id);
 
-    if (!target) return;
+    if (!target) {
+      return;
+    }
 
     setActiveSection(id);
     setIsOpen(false);
     setHidden(false);
 
-    const navbarHeight = 88;
+    const navbarHeight =
+      window.innerWidth >= 1024
+        ? 84
+        : 80;
 
     const targetPosition =
       target.getBoundingClientRect().top +
@@ -204,7 +219,10 @@ const Navbar = () => {
       navbarHeight;
 
     window.scrollTo({
-      top: Math.max(targetPosition, 0),
+      top: Math.max(
+        targetPosition,
+        0
+      ),
       behavior: shouldReduceMotion
         ? "auto"
         : "smooth",
@@ -218,10 +236,10 @@ const Navbar = () => {
   };
 
   /*
-  |--------------------------------------------------------------------------
-  | Logo navigation
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Logo navigation
+   * ---------------------------------------------------------
+   */
 
   const handleLogoClick = (
     event: MouseEvent<HTMLAnchorElement>
@@ -247,20 +265,20 @@ const Navbar = () => {
   };
 
   /*
-  |--------------------------------------------------------------------------
-  | Theme
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Theme
+   * ---------------------------------------------------------
+   */
 
   const handleThemeToggle = () => {
     dispatch(toggleTheme());
   };
 
   /*
-  |--------------------------------------------------------------------------
-  | Escape key
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Escape key
+   * ---------------------------------------------------------
+   */
 
   useEffect(() => {
     const handleEscape = (
@@ -285,14 +303,15 @@ const Navbar = () => {
   }, []);
 
   /*
-  |--------------------------------------------------------------------------
-  | Prevent body scroll on mobile
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Prevent body scroll on mobile menu
+   * ---------------------------------------------------------
+   */
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow =
+        "hidden";
     } else {
       document.body.style.overflow = "";
     }
@@ -303,14 +322,14 @@ const Navbar = () => {
   }, [isOpen]);
 
   /*
-  |--------------------------------------------------------------------------
-  | Close mobile menu on resize
-  |--------------------------------------------------------------------------
-  */
+   * ---------------------------------------------------------
+   * Close mobile menu on desktop resize
+   * ---------------------------------------------------------
+   */
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1280) {
         setIsOpen(false);
       }
     };
@@ -330,9 +349,9 @@ const Navbar = () => {
 
   return (
     <>
-      {/* =========================================================
+      {/* =====================================================
           NAVBAR
-      ========================================================= */}
+      ===================================================== */}
 
       <motion.nav
         initial={{
@@ -352,19 +371,18 @@ const Navbar = () => {
         className="fixed inset-x-0 top-0 z-[100]"
         aria-label="Main navigation"
       >
-        {/* Outer glass layer */}
-
         <div
-          className={`mx-auto transition-all duration-300 ${
+          className={`mx-auto border-b transition-all duration-300 ${
             scrolled
-              ? "border-b border-white/10 bg-slate-950/85 shadow-2xl shadow-black/20 backdrop-blur-2xl"
-              : "bg-transparent"
+              ? "border-white/10 bg-slate-950/85 shadow-2xl shadow-black/20 backdrop-blur-2xl"
+              : "border-transparent bg-transparent"
           }`}
         >
           <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:h-[84px] lg:px-8">
-            {/* =====================================================
+
+            {/* =================================================
                 LOGO
-            ===================================================== */}
+            ================================================= */}
 
             <a
               href="#home"
@@ -382,17 +400,15 @@ const Navbar = () => {
                 </span>
               </div>
 
-              {/* Logo underline */}
-
               <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-300 group-hover:w-full" />
             </a>
 
-            {/* =====================================================
+            {/* =================================================
                 DESKTOP NAVIGATION
-            ===================================================== */}
+            ================================================= */}
 
             <div className="hidden items-center xl:flex">
-              <div className="flex items-center gap-1 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-1.5 backdrop-blur-md">
+              <div className="flex items-center gap-1 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-1.5 shadow-xl shadow-black/5 backdrop-blur-md">
                 {navItems.map((item) => {
                   const sectionId =
                     item.href.substring(1);
@@ -410,6 +426,11 @@ const Navbar = () => {
                           event,
                           item.href
                         )
+                      }
+                      aria-current={
+                        isActive
+                          ? "page"
+                          : undefined
                       }
                       className={`relative rounded-xl px-3 py-2 text-[13px] font-medium transition-all duration-200 2xl:px-3.5 ${
                         isActive
@@ -450,11 +471,12 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* =====================================================
+            {/* =================================================
                 DESKTOP ACTIONS
-            ===================================================== */}
+            ================================================= */}
 
             <div className="hidden items-center gap-2 xl:flex">
+
               {/* Theme */}
 
               <button
@@ -518,6 +540,7 @@ const Navbar = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub profile"
+                title="GitHub profile"
                 className="group flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-slate-400 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
               >
                 <FaGithub
@@ -533,6 +556,7 @@ const Navbar = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn profile"
+                title="LinkedIn profile"
                 className="group flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-slate-400 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
               >
                 <FaLinkedin
@@ -545,10 +569,15 @@ const Navbar = () => {
 
               <a
                 href={RESUME_URL}
-                download
-                className="ml-1 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-slate-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-300"
+                download="Priya-Tyagi-Resume.pdf"
+                aria-label="Download resume"
+                className="group ml-1 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-slate-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
               >
-                <FaDownload size={11} />
+                <FaDownload
+                  size={11}
+                  className="transition-transform duration-200 group-hover:-translate-y-0.5"
+                />
+
                 Resume
               </a>
 
@@ -573,19 +602,25 @@ const Navbar = () => {
               </a>
             </div>
 
-            {/* =====================================================
+            {/* =================================================
                 TABLET / MOBILE ACTIONS
-            ===================================================== */}
+            ================================================= */}
 
             <div className="flex items-center gap-2 xl:hidden">
-              {/* Mobile theme */}
+
+              {/* Theme */}
 
               <button
                 type="button"
                 onClick={
                   handleThemeToggle
                 }
-                aria-label="Toggle theme"
+                aria-label={
+                  theme === "dark"
+                    ? "Switch to light theme"
+                    : "Switch to dark theme"
+                }
+                title="Toggle theme"
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
               >
                 {theme === "dark" ? (
@@ -595,7 +630,7 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* Menu button */}
+              {/* Menu */}
 
               <button
                 type="button"
@@ -657,9 +692,9 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* =======================================================
+          {/* =================================================
               MOBILE MENU
-          ======================================================= */}
+          ================================================= */}
 
           <AnimatePresence>
             {isOpen && (
@@ -671,7 +706,8 @@ const Navbar = () => {
                 }}
                 animate={{
                   opacity: 1,
-                  height: "calc(100vh - 80px)",
+                  height:
+                    "calc(100dvh - 80px)",
                 }}
                 exit={{
                   opacity: 0,
@@ -687,6 +723,7 @@ const Navbar = () => {
                 className="overflow-hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-2xl xl:hidden"
               >
                 <div className="mx-auto flex h-full max-w-2xl flex-col px-5 py-6 sm:px-8">
+
                   {/* Mobile heading */}
 
                   <div className="mb-5 flex items-center justify-between">
@@ -754,18 +791,21 @@ const Navbar = () => {
                                   item.href
                                 )
                               }
+                              aria-current={
+                                isActive
+                                  ? "page"
+                                  : undefined
+                              }
                               className={`group relative flex items-center justify-between overflow-hidden rounded-2xl px-5 py-4 transition-all duration-200 ${
                                 isActive
                                   ? "border border-cyan-400/20 bg-cyan-400/10 text-cyan-300"
                                   : "border border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white"
                               }`}
                             >
-                              {/* Active glow */}
-
                               {isActive && (
                                 <motion.span
                                   layoutId="mobile-active"
-                                  className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-cyan-400"
+                                  className="absolute bottom-2 left-0 top-2 w-1 rounded-r-full bg-cyan-400"
                                 />
                               )}
 
@@ -778,8 +818,7 @@ const Navbar = () => {
                                   }`}
                                 >
                                   {String(
-                                    index +
-                                      1
+                                    index + 1
                                   ).padStart(
                                     2,
                                     "0"
@@ -807,6 +846,7 @@ const Navbar = () => {
 
                   <div className="mt-6 border-t border-white/10 pt-5">
                     <div className="flex flex-wrap items-center gap-3">
+
                       {/* GitHub */}
 
                       <a
@@ -816,7 +856,8 @@ const Navbar = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="GitHub profile"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-400"
+                        title="GitHub profile"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
                       >
                         <FaGithub />
                       </a>
@@ -830,7 +871,8 @@ const Navbar = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="LinkedIn profile"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-400"
+                        title="LinkedIn profile"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
                       >
                         <FaLinkedin />
                       </a>
@@ -841,10 +883,14 @@ const Navbar = () => {
                         href={
                           RESUME_URL
                         }
-                        download
-                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-400/30 hover:text-cyan-300 sm:flex-none"
+                        download="Priya-Tyagi-Resume.pdf"
+                        aria-label="Download resume"
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-400/30 hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 sm:flex-none"
                       >
-                        <FaDownload size={12} />
+                        <FaDownload
+                          size={12}
+                        />
+
                         Resume
                       </a>
 
@@ -860,7 +906,7 @@ const Navbar = () => {
                             "#contact"
                           )
                         }
-                        className="group inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/10 transition hover:bg-cyan-300 sm:flex-none"
+                        className="group inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/10 transition hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-300/40 sm:flex-none"
                       >
                         Let's Talk
 
