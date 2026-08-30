@@ -22,7 +22,6 @@ import {
   FaChevronDown,
   FaTerminal,
   FaBolt,
-  FaLayerGroup,
   FaRocket,
   FaCircle,
   FaCheck,
@@ -149,7 +148,7 @@ const Hero = () => {
         subtitle: "React + TypeScript",
         icon: FaReact,
         position:
-          "left-0 top-[10%] lg:-left-10",
+          "left-0 top-[8%] lg:-left-10 lg:top-[10%]",
         iconClass: "text-cyan-400",
       },
       {
@@ -157,7 +156,7 @@ const Hero = () => {
         subtitle: "Node + Express",
         icon: FaServer,
         position:
-          "right-0 top-[30%] lg:-right-12",
+          "right-0 top-[28%] lg:-right-12 lg:top-[30%]",
         iconClass: "text-purple-400",
       },
       {
@@ -165,7 +164,7 @@ const Hero = () => {
         subtitle: "MongoDB",
         icon: FaDatabase,
         position:
-          "bottom-[14%] left-1 lg:-left-8",
+          "bottom-[10%] left-0 lg:-left-8 lg:bottom-[14%]",
         iconClass: "text-emerald-400",
       },
     ],
@@ -427,7 +426,7 @@ const Hero = () => {
     <section
       id="home"
       aria-label="Hero section"
-      className="relative isolate min-h-screen overflow-hidden bg-slate-950 px-4 pb-20 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-24"
+      className="relative isolate min-h-screen w-full overflow-hidden bg-slate-950 px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 md:pt-32 lg:px-8 lg:pb-24"
     >
       {/* ===================================================
           BACKGROUND
@@ -444,10 +443,10 @@ const Hero = () => {
             shouldReduceMotion
               ? undefined
               : {
-                  x: [0, 50, 0],
-                  y: [0, -35, 0],
-                  scale: [1, 1.1, 1],
-                  opacity: [0.25, 0.5, 0.25],
+                  x: [0, 30, 0],
+                  y: [0, -20, 0],
+                  scale: [1, 1.06, 1],
+                  opacity: [0.2, 0.4, 0.2],
                 }
           }
           transition={{
@@ -455,7 +454,7 @@ const Hero = () => {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute left-[30%] top-[-14rem] h-[40rem] w-[40rem] rounded-full bg-cyan-500/10 blur-[140px]"
+          className="absolute left-[10%] top-[-12rem] h-[25rem] w-[25rem] rounded-full bg-cyan-500/10 blur-[100px] sm:left-[25%] sm:h-[35rem] sm:w-[35rem] sm:blur-[130px] lg:left-[30%] lg:h-[40rem] lg:w-[40rem] lg:blur-[140px]"
         />
 
         {/* Purple glow */}
@@ -465,10 +464,10 @@ const Hero = () => {
             shouldReduceMotion
               ? undefined
               : {
-                  x: [0, -35, 0],
-                  y: [0, 35, 0],
-                  scale: [1, 1.08, 1],
-                  opacity: [0.2, 0.4, 0.2],
+                  x: [0, -25, 0],
+                  y: [0, 25, 0],
+                  scale: [1, 1.05, 1],
+                  opacity: [0.15, 0.32, 0.15],
                 }
           }
           transition={{
@@ -476,12 +475,12 @@ const Hero = () => {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute right-[-15rem] top-[20%] h-[36rem] w-[36rem] rounded-full bg-purple-600/10 blur-[130px]"
+          className="absolute right-[-12rem] top-[25%] h-[25rem] w-[25rem] rounded-full bg-purple-600/10 blur-[100px] sm:h-[32rem] sm:w-[32rem] sm:blur-[120px] lg:right-[-15rem] lg:h-[36rem] lg:w-[36rem] lg:blur-[130px]"
         />
 
         {/* Blue bottom glow */}
 
-        <div className="absolute bottom-[-16rem] left-[-12rem] h-[34rem] w-[34rem] rounded-full bg-blue-600/10 blur-[130px]" />
+        <div className="absolute bottom-[-12rem] left-[-10rem] h-[25rem] w-[25rem] rounded-full bg-blue-600/10 blur-[100px] sm:h-[30rem] sm:w-[30rem] sm:blur-[120px] lg:bottom-[-16rem] lg:left-[-12rem] lg:h-[34rem] lg:w-[34rem] lg:blur-[130px]" />
 
         {/* Center atmosphere */}
 
@@ -490,11 +489,12 @@ const Hero = () => {
         {/* Grid */}
 
         <div
-          className="absolute inset-0 opacity-[0.045]"
+          className="absolute inset-0 opacity-[0.035] sm:opacity-[0.045]"
           style={{
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
+            backgroundSize:
+              "42px 42px",
             maskImage:
               "linear-gradient(to bottom, black 0%, transparent 88%)",
             WebkitMaskImage:
@@ -508,7 +508,7 @@ const Hero = () => {
 
         {/* Bottom fade */}
 
-        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent sm:h-56" />
       </div>
 
       {/* ===================================================
@@ -520,17 +520,20 @@ const Hero = () => {
         transition={{
           duration: 0.7,
         }}
-        className="relative mx-auto mb-10 flex max-w-7xl justify-center lg:justify-start"
+        className="relative mx-auto mb-8 flex w-full max-w-7xl justify-center sm:mb-10 lg:justify-start"
       >
-        <div className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300 shadow-[0_0_40px_rgba(34,211,238,0.06)] backdrop-blur-xl sm:text-[11px]">
+        <div className="group relative inline-flex max-w-full items-center gap-2 overflow-hidden rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-3 py-2 text-[8px] font-bold uppercase tracking-[0.14em] text-cyan-300 shadow-[0_0_40px_rgba(34,211,238,0.06)] backdrop-blur-xl xs:text-[9px] sm:gap-3 sm:px-4 sm:py-2.5 sm:text-[11px] sm:tracking-[0.2em]">
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
-          <span className="relative flex h-2.5 w-2.5">
+          <span className="relative flex h-2 w-2 shrink-0 sm:h-2.5 sm:w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60" />
-            <span className="relative h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
+
+            <span className="relative h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)] sm:h-2.5 sm:w-2.5" />
           </span>
 
-          Available for opportunities
+          <span className="truncate">
+            Available for opportunities
+          </span>
 
           <span className="hidden text-slate-600 sm:inline">
             •
@@ -546,7 +549,7 @@ const Hero = () => {
           MAIN GRID
       =================================================== */}
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-16 lg:min-h-[calc(100vh-14rem)] lg:grid-cols-[1.02fr_0.98fr] lg:gap-20">
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 sm:gap-16 lg:min-h-[calc(100vh-14rem)] lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 xl:gap-20">
         {/* =================================================
             LEFT CONTENT
         ================================================= */}
@@ -564,7 +567,7 @@ const Hero = () => {
             duration: 0.9,
             ease: "easeOut",
           }}
-          className="relative z-10"
+          className="relative z-10 min-w-0"
         >
           {/* Greeting */}
 
@@ -574,9 +577,9 @@ const Hero = () => {
               duration: 0.6,
               delay: 0.12,
             }}
-            className="mb-5 flex items-center gap-3 text-sm font-medium text-slate-500 sm:text-base"
+            className="mb-4 flex items-center gap-2 text-xs font-medium text-slate-500 sm:mb-5 sm:gap-3 sm:text-base"
           >
-            <span className="h-px w-8 bg-gradient-to-r from-transparent to-cyan-400/70" />
+            <span className="h-px w-6 bg-gradient-to-r from-transparent to-cyan-400/70 sm:w-8" />
 
             Hello, I'm
 
@@ -593,7 +596,7 @@ const Hero = () => {
               duration: 0.8,
               delay: 0.2,
             }}
-            className="max-w-5xl text-[3.5rem] font-black leading-[0.92] tracking-[-0.065em] text-white sm:text-6xl md:text-7xl lg:text-[5.4rem] xl:text-[6.3rem]"
+            className="max-w-full text-[3rem] font-black leading-[0.94] tracking-[-0.065em] text-white xs:text-[3.3rem] sm:text-6xl md:text-7xl lg:text-[5.2rem] xl:text-[6.1rem]"
           >
             Abhay{" "}
             <span className="relative inline-block">
@@ -623,7 +626,7 @@ const Hero = () => {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute -bottom-2 left-0 h-[3px] w-full origin-left rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 blur-[1px]"
+                className="absolute -bottom-1 left-0 h-[2px] w-full origin-left rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 blur-[1px] sm:-bottom-2 sm:h-[3px]"
               />
             </span>
           </motion.h1>
@@ -636,14 +639,14 @@ const Hero = () => {
               duration: 0.65,
               delay: 0.34,
             }}
-            className="mt-8 flex flex-wrap items-center gap-3"
+            className="mt-6 flex flex-wrap items-center gap-2.5 sm:mt-8 sm:gap-3"
           >
-            <h2 className="text-xl font-bold tracking-tight text-slate-200 sm:text-2xl lg:text-3xl">
+            <h2 className="text-lg font-bold tracking-tight text-slate-200 xs:text-xl sm:text-2xl lg:text-3xl">
               MERN Stack Developer
             </h2>
 
-            <span className="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/[0.07] px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-purple-300">
-              <FaRocket className="text-[9px]" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-purple-400/20 bg-purple-400/[0.07] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.16em] text-purple-300 sm:gap-2 sm:px-3 sm:text-[9px] sm:tracking-[0.18em]">
+              <FaRocket className="text-[8px] sm:text-[9px]" />
               Builder
             </span>
           </motion.div>
@@ -656,7 +659,7 @@ const Hero = () => {
               duration: 0.65,
               delay: 0.45,
             }}
-            className="mt-7 max-w-2xl text-[15px] leading-7 text-slate-400 sm:text-lg sm:leading-8"
+            className="mt-5 max-w-2xl text-sm leading-7 text-slate-400 sm:mt-7 sm:text-lg sm:leading-8"
           >
             I build{" "}
             <span className="font-semibold text-slate-200">
@@ -678,7 +681,7 @@ const Hero = () => {
               duration: 0.65,
               delay: 0.56,
             }}
-            className="mt-8 flex flex-wrap gap-2.5"
+            className="mt-6 flex flex-wrap gap-2 sm:mt-8 sm:gap-2.5"
           >
             {techStack.map(
               (technology) => {
@@ -698,20 +701,20 @@ const Hero = () => {
                             scale: 1.03,
                           }
                     }
-                    className="group relative flex cursor-default items-center gap-2.5 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.035] px-3.5 py-2.5 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.06]"
+                    className="group relative flex min-w-0 cursor-default items-center gap-2 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.035] px-2.5 py-2 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.06] sm:gap-2.5 sm:px-3.5 sm:py-2.5"
                   >
                     <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.05] to-transparent transition-transform duration-500 group-hover:translate-x-full" />
 
                     <Icon
-                      className={`relative text-sm ${technology.color}`}
+                      className={`relative shrink-0 text-xs sm:text-sm ${technology.color}`}
                     />
 
-                    <div className="relative">
-                      <p className="text-xs font-semibold text-slate-300">
+                    <div className="relative min-w-0">
+                      <p className="truncate text-[10px] font-semibold text-slate-300 sm:text-xs">
                         {technology.name}
                       </p>
 
-                      <p className="text-[8px] uppercase tracking-wider text-slate-600">
+                      <p className="hidden text-[8px] uppercase tracking-wider text-slate-600 xs:block">
                         {technology.description}
                       </p>
                     </div>
@@ -731,7 +734,7 @@ const Hero = () => {
               duration: 0.65,
               delay: 0.68,
             }}
-            className="mt-10 flex flex-wrap gap-3"
+            className="mt-8 flex w-full flex-col gap-3 xs:flex-row sm:mt-10 sm:flex-wrap"
           >
             {/* Projects */}
 
@@ -753,7 +756,7 @@ const Hero = () => {
                   "projects"
                 )
               }
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 px-6 py-3.5 text-sm font-bold text-slate-950 shadow-[0_12px_40px_rgba(34,211,238,0.18)] transition-all duration-300 hover:shadow-[0_18px_55px_rgba(34,211,238,0.28)] focus:outline-none focus:ring-2 focus:ring-cyan-300/50"
+              className="group relative inline-flex min-h-12 w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-3.5 text-sm font-bold text-slate-950 shadow-[0_12px_40px_rgba(34,211,238,0.18)] transition-all duration-300 hover:shadow-[0_18px_55px_rgba(34,211,238,0.28)] focus:outline-none focus:ring-2 focus:ring-cyan-300/50] xs:w-auto sm:px-6"
             >
               <span className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-500 group-hover:translate-x-full" />
 
@@ -782,7 +785,7 @@ const Hero = () => {
               whileTap={{
                 scale: 0.97,
               }}
-              className="group inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-6 py-3.5 text-sm font-semibold text-slate-200 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/30 hover:bg-cyan-400/[0.06] hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
+              className="group inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-3.5 text-sm font-semibold text-slate-200 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/30 hover:bg-cyan-400/[0.06] hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 xs:w-auto sm:px-6"
             >
               <FaDownload
                 size={12}
@@ -803,7 +806,7 @@ const Hero = () => {
               duration: 0.6,
               delay: 0.8,
             }}
-            className="mt-8 flex flex-wrap items-center gap-3"
+            className="mt-7 flex flex-wrap items-center gap-3 sm:mt-8"
           >
             {socialLinks.map(
               (social) => {
@@ -829,9 +832,9 @@ const Hero = () => {
                     whileTap={{
                       scale: 0.94,
                     }}
-                    className="group flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.035] text-slate-500 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/30 hover:bg-cyan-400/[0.06] hover:text-cyan-300"
+                    className="group flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.035] text-slate-500 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/30 hover:bg-cyan-400/[0.06] hover:text-cyan-300 sm:h-11 sm:w-11"
                   >
-                    <Icon className="text-lg transition-transform duration-300 group-hover:scale-110" />
+                    <Icon className="text-base transition-transform duration-300 group-hover:scale-110 sm:text-lg" />
                   </motion.a>
                 );
               }
@@ -839,8 +842,8 @@ const Hero = () => {
 
             <div className="hidden h-8 w-px bg-white/10 sm:block" />
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/10 bg-emerald-400/[0.03] px-3 py-2 text-xs text-slate-500">
-              <span className="relative flex h-2 w-2">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-400/10 bg-emerald-400/[0.03] px-3 py-2 text-[10px] text-slate-500 sm:text-xs">
+              <span className="relative flex h-2 w-2 shrink-0">
                 <span className="absolute h-full w-full animate-ping rounded-full bg-emerald-400 opacity-40" />
 
                 <span className="relative h-2 w-2 rounded-full bg-emerald-400" />
@@ -860,13 +863,13 @@ const Hero = () => {
               duration: 0.65,
               delay: 0.92,
             }}
-            className="mt-10 grid max-w-xl grid-cols-3 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025] shadow-2xl shadow-black/10 backdrop-blur-xl"
+            className="mt-8 grid w-full max-w-xl grid-cols-3 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025] shadow-2xl shadow-black/10 backdrop-blur-xl sm:mt-10"
           >
             {stats.map(
               (stat, index) => (
                 <div
                   key={stat.value}
-                  className={`relative px-4 py-4 sm:px-6 ${
+                  className={`relative min-w-0 px-2.5 py-3.5 sm:px-6 sm:py-4 ${
                     index !== 0
                       ? "border-l border-white/[0.07]"
                       : ""
@@ -874,11 +877,11 @@ const Hero = () => {
                 >
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
 
-                  <p className="text-xl font-black tracking-tight text-white sm:text-2xl">
+                  <p className="truncate text-base font-black tracking-tight text-white xs:text-lg sm:text-2xl">
                     {stat.value}
                   </p>
 
-                  <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-600 sm:text-[10px]">
+                  <p className="mt-1 truncate text-[7px] font-semibold uppercase tracking-[0.12em] text-slate-600 xs:text-[8px] sm:text-[10px] sm:tracking-[0.16em]">
                     {stat.label}
                   </p>
                 </div>
@@ -907,7 +910,7 @@ const Hero = () => {
             delay: 0.18,
             ease: "easeOut",
           }}
-          className="relative flex min-h-[530px] items-center justify-center lg:min-h-[610px]"
+          className="relative flex min-h-[420px] w-full items-center justify-center sm:min-h-[500px] lg:min-h-[610px]"
         >
           {/* =================================================
               AMBIENT GLOW
@@ -931,7 +934,7 @@ const Hero = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute h-[26rem] w-[26rem] rounded-full bg-cyan-500/10 blur-[110px]"
+            className="absolute h-[18rem] w-[18rem] rounded-full bg-cyan-500/10 blur-[80px] sm:h-[24rem] sm:w-[24rem] sm:blur-[100px] lg:h-[26rem] lg:w-[26rem] lg:blur-[110px]"
           />
 
           {/* =================================================
@@ -951,7 +954,7 @@ const Hero = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute h-[32rem] w-[32rem] rounded-full border border-cyan-400/[0.05]"
+            className="absolute h-[22rem] w-[22rem] rounded-full border border-cyan-400/[0.05] sm:h-[28rem] sm:w-[28rem] lg:h-[32rem] lg:w-[32rem]"
           />
 
           <motion.div
@@ -967,7 +970,7 @@ const Hero = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute h-[25rem] w-[25rem] rounded-full border border-purple-400/[0.05]"
+            className="absolute h-[17rem] w-[17rem] rounded-full border border-purple-400/[0.05] sm:h-[22rem] sm:w-[22rem] lg:h-[25rem] lg:w-[25rem]"
           />
 
           <div className="relative w-full max-w-xl">
@@ -988,7 +991,7 @@ const Hero = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute -top-7 left-7 z-30 hidden items-center gap-2 rounded-xl border border-white/10 bg-slate-900/90 px-4 py-2.5 text-[10px] font-semibold text-slate-400 shadow-2xl backdrop-blur-2xl sm:flex"
+              className="absolute -top-6 left-5 z-30 hidden items-center gap-2 rounded-xl border border-white/10 bg-slate-900/90 px-3 py-2 text-[9px] font-semibold text-slate-400 shadow-2xl backdrop-blur-2xl sm:flex sm:px-4 sm:py-2.5 sm:text-[10px] lg:-top-7 lg:left-7"
             >
               <FaTerminal className="text-cyan-400" />
 
@@ -1007,7 +1010,7 @@ const Hero = () => {
                 TERMINAL CARD
             ================================================= */}
 
-            <div className="group relative overflow-hidden rounded-[2rem] border border-white/[0.1] bg-slate-900/75 shadow-[0_35px_120px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
+            <div className="group relative w-full overflow-hidden rounded-[1.5rem] border border-white/[0.1] bg-slate-900/75 shadow-[0_35px_120px_rgba(0,0,0,0.5)] backdrop-blur-2xl sm:rounded-[2rem]">
               {/* Gradient overlay */}
 
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-400/[0.08] via-transparent to-purple-500/[0.08]" />
@@ -1020,20 +1023,20 @@ const Hero = () => {
                   TERMINAL HEADER
               ================================================= */}
 
-              <div className="relative flex items-center justify-between border-b border-white/[0.08] bg-white/[0.025] px-5 py-4 sm:px-6">
-                <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-full bg-red-400/80 shadow-sm shadow-red-400/20" />
+              <div className="relative flex items-center justify-between border-b border-white/[0.08] bg-white/[0.025] px-4 py-3 sm:px-6 sm:py-4">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-400/80 shadow-sm shadow-red-400/20 sm:h-3 sm:w-3" />
 
-                  <span className="h-3 w-3 rounded-full bg-yellow-400/80 shadow-sm shadow-yellow-400/20" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/80 shadow-sm shadow-yellow-400/20 sm:h-3 sm:w-3" />
 
-                  <span className="h-3 w-3 rounded-full bg-green-400/80 shadow-sm shadow-green-400/20" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-green-400/80 shadow-sm shadow-green-400/20 sm:h-3 sm:w-3" />
                 </div>
 
-                <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-600">
-                  <span className="relative flex h-2 w-2">
+                <div className="flex items-center gap-1.5 text-[7px] font-semibold uppercase tracking-[0.12em] text-slate-600 sm:gap-2 sm:text-[9px] sm:tracking-[0.16em]">
+                  <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
                     <span className="absolute h-full w-full animate-ping rounded-full bg-emerald-400 opacity-40" />
 
-                    <span className="relative h-2 w-2 rounded-full bg-emerald-400" />
+                    <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-400 sm:h-2 sm:w-2" />
                   </span>
 
                   production
@@ -1044,17 +1047,17 @@ const Hero = () => {
                   TABS
               ================================================= */}
 
-              <div className="relative flex border-b border-white/[0.06] bg-black/10">
-                <div className="border-r border-white/[0.05] border-b-2 border-b-cyan-400 bg-cyan-400/[0.04] px-5 py-2.5 text-[10px] font-medium text-cyan-300">
+              <div className="relative flex min-w-0 overflow-hidden border-b border-white/[0.06] bg-black/10">
+                <div className="shrink-0 border-r border-white/[0.05] border-b-2 border-b-cyan-400 bg-cyan-400/[0.04] px-3 py-2 text-[8px] font-medium text-cyan-300 sm:px-5 sm:py-2.5 sm:text-[10px]">
                   developer.tsx
                 </div>
 
-                <div className="px-5 py-2.5 text-[10px] text-slate-600">
+                <div className="shrink-0 px-3 py-2 text-[8px] text-slate-600 sm:px-5 sm:py-2.5 sm:text-[10px]">
                   portfolio
                 </div>
 
-                <div className="ml-auto flex items-center px-5 text-slate-700">
-                  <FaExternalLinkAlt size={9} />
+                <div className="ml-auto flex shrink-0 items-center px-3 text-slate-700 sm:px-5">
+                  <FaExternalLinkAlt size={8} />
                 </div>
               </div>
 
@@ -1062,8 +1065,8 @@ const Hero = () => {
                   CODE AREA
               ================================================= */}
 
-              <div className="relative overflow-x-auto px-4 py-7 sm:px-6 sm:py-8">
-                <div className="min-w-[390px] font-mono text-[11px] leading-7 sm:text-[12px] sm:leading-8">
+              <div className="relative overflow-x-auto px-3 py-5 sm:px-6 sm:py-8">
+                <div className="min-w-[330px] font-mono text-[9px] leading-6 xs:text-[10px] sm:min-w-[390px] sm:text-[12px] sm:leading-8">
                   {codeLines.map(
                     (line) => (
                       <div
@@ -1072,13 +1075,13 @@ const Hero = () => {
                         }
                         className="flex"
                       >
-                        <span className="mr-5 w-5 select-none text-right text-slate-700">
+                        <span className="mr-3 w-4 shrink-0 select-none text-right text-slate-700 sm:mr-5 sm:w-5">
                           {
                             line.number
                           }
                         </span>
 
-                        <span>
+                        <span className="whitespace-nowrap">
                           {
                             line.content
                           }
@@ -1089,12 +1092,12 @@ const Hero = () => {
 
                   {/* Export */}
 
-                  <div className="mt-5 flex">
-                    <span className="mr-5 w-5 select-none text-right text-slate-700">
+                  <div className="mt-4 flex sm:mt-5">
+                    <span className="mr-3 w-4 shrink-0 select-none text-right text-slate-700 sm:mr-5 sm:w-5">
                       12
                     </span>
 
-                    <span>
+                    <span className="whitespace-nowrap">
                       <span className="text-purple-400">
                         export
                       </span>{" "}
@@ -1137,17 +1140,17 @@ const Hero = () => {
                   TERMINAL FOOTER
               ================================================= */}
 
-              <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] bg-white/[0.015] px-5 py-4 sm:px-6">
-                <div className="flex items-center gap-2">
-                  <FaCheck className="text-[10px] text-emerald-400" />
+              <div className="relative flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.07] bg-white/[0.015] px-4 py-3 sm:gap-3 sm:px-6 sm:py-4">
+                <div className="flex items-center gap-1.5">
+                  <FaCheck className="text-[8px] text-emerald-400 sm:text-[10px]" />
 
-                  <span className="text-[10px] font-medium text-slate-500">
+                  <span className="text-[8px] font-medium text-slate-500 sm:text-[10px]">
                     Build successful
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-[10px] text-slate-700">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="font-mono text-[8px] text-slate-700 sm:text-[10px]">
                     v1.0.0
                   </span>
 
@@ -1155,7 +1158,7 @@ const Hero = () => {
                     |
                   </span>
 
-                  <span className="font-mono text-[10px] text-slate-600">
+                  <span className="font-mono text-[8px] text-slate-600 sm:text-[10px]">
                     main
                   </span>
                 </div>
@@ -1209,20 +1212,20 @@ const Hero = () => {
                       delay:
                         index * 0.35,
                     }}
-                    className={`absolute ${card.position} z-20 hidden rounded-2xl border border-white/10 bg-slate-900/90 p-3 shadow-2xl backdrop-blur-2xl sm:flex sm:items-center sm:gap-3`}
+                    className={`absolute ${card.position} z-20 hidden rounded-2xl border border-white/10 bg-slate-900/90 p-2.5 shadow-2xl backdrop-blur-2xl sm:flex sm:items-center sm:gap-2.5 sm:p-3`}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] sm:h-10 sm:w-10">
                       <Icon
-                        className={`text-lg ${card.iconClass}`}
+                        className={`text-base sm:text-lg ${card.iconClass}`}
                       />
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-bold text-slate-200">
+                      <p className="text-[10px] font-bold text-slate-200 sm:text-[11px]">
                         {card.title}
                       </p>
 
-                      <p className="mt-0.5 text-[9px] text-slate-600">
+                      <p className="mt-0.5 text-[8px] text-slate-600 sm:text-[9px]">
                         {card.subtitle}
                       </p>
                     </div>
@@ -1253,18 +1256,18 @@ const Hero = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute -bottom-7 right-7 z-30 hidden items-center gap-3 rounded-2xl border border-white/10 bg-slate-900/95 px-4 py-3 shadow-2xl backdrop-blur-2xl sm:flex"
+              className="absolute -bottom-6 right-4 z-30 hidden items-center gap-2.5 rounded-2xl border border-white/10 bg-slate-900/95 px-3 py-2.5 shadow-2xl backdrop-blur-2xl sm:flex sm:gap-3 sm:px-4 sm:py-3 lg:right-7"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-400">
-                <FaRocket />
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-400 sm:h-9 sm:w-9">
+                <FaRocket className="text-sm sm:text-base" />
               </div>
 
               <div>
-                <p className="text-[10px] font-bold text-white">
+                <p className="text-[9px] font-bold text-white sm:text-[10px]">
                   Ready to build
                 </p>
 
-                <p className="mt-0.5 text-[9px] text-slate-600">
+                <p className="mt-0.5 text-[8px] text-slate-600 sm:text-[9px]">
                   Ideas → Products
                 </p>
               </div>
@@ -1287,11 +1290,11 @@ const Hero = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute -bottom-5 left-8 z-30 hidden items-center gap-2 rounded-xl border border-white/10 bg-slate-900/95 px-3 py-2 shadow-xl backdrop-blur-2xl md:flex"
+              className="absolute -bottom-4 left-4 z-30 hidden items-center gap-2 rounded-xl border border-white/10 bg-slate-900/95 px-3 py-2 shadow-xl backdrop-blur-2xl md:flex lg:left-8"
             >
-              <FaBolt className="text-[10px] text-cyan-400" />
+              <FaBolt className="text-[9px] text-cyan-400 sm:text-[10px]" />
 
-              <span className="text-[9px] font-semibold text-slate-500">
+              <span className="text-[8px] font-semibold text-slate-500 sm:text-[9px]">
                 API • UI • Database
               </span>
             </motion.div>
@@ -1379,7 +1382,7 @@ const Hero = () => {
 
       <div
         aria-hidden="true"
-        className="absolute bottom-0 left-1/2 h-px w-[70%] -translate-x-1/2 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
+        className="absolute bottom-0 left-1/2 h-px w-[85%] -translate-x-1/2 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent sm:w-[70%]"
       />
     </section>
   );
