@@ -1,13 +1,17 @@
-node_modules/
-
-dist/
-
-.env
-
-.env.*
-
-!.env.example
-
-*.log
-
-*.tsbuildinfo
+(
+echo node_modules/
+echo.
+echo dist/
+echo.
+echo .env
+echo.
+echo .env.*
+echo.
+echo !.env.example
+echo.
+echo *.log
+echo.
+echo *.tsbuildinfo
+echo.
+echo backend/
+)> .gitignore

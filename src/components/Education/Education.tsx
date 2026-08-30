@@ -1,9 +1,4 @@
-import {
-  motion,
-  useReducedMotion,
-  type Variants,
-} from "framer-motion";
-
+import { motion, type Variants } from "framer-motion";
 import {
   FaGraduationCap,
   FaCalendarAlt,
@@ -13,345 +8,260 @@ import {
   FaCheckCircle,
   FaArrowRight,
   FaCode,
+  FaDatabase,
   FaLaptopCode,
-  FaLayerGroup,
 } from "react-icons/fa";
 
 import { education } from "../../data/education";
 
-/* =========================================================
-   TYPES
-========================================================= */
-
-interface LearningAreaProps {
-  children: string;
-}
-
-interface SummaryCard {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  iconClass: string;
-}
-
-/* =========================================================
-   ANIMATION VARIANTS
-========================================================= */
-
-const createVariants = (
-  reducedMotion: boolean
-): {
-  fadeUp: Variants;
-  slideRight: Variants;
-  scale: Variants;
-} => {
-  if (reducedMotion) {
-    return {
-      fadeUp: {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-      },
-
-      slideRight: {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-      },
-
-      scale: {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-      },
-    };
-  }
-
-  return {
-    fadeUp: {
-      hidden: {
-        opacity: 0,
-        y: 30,
-      },
-
-      visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-          duration: 0.65,
-          ease: "easeOut",
-        },
-      },
+const containerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
     },
-
-    slideRight: {
-      hidden: {
-        opacity: 0,
-        x: 40,
-      },
-
-      visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-          duration: 0.65,
-          ease: "easeOut",
-        },
-      },
-    },
-
-    scale: {
-      hidden: {
-        opacity: 0,
-        scale: 0.8,
-      },
-
-      visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-          duration: 0.45,
-          ease: "easeOut",
-        },
-      },
-    },
-  };
+  },
 };
 
-/* =========================================================
-   LEARNING AREAS
-========================================================= */
-
-const learningAreas = [
-  {
-    label: "Programming",
-    icon: <FaCode />,
+const itemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
   },
-  {
-    label: "Computer Science",
-    icon: <FaBookOpen />,
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: "easeOut",
+    },
   },
-  {
-    label: "Software Development",
-    icon: <FaLaptopCode />,
-  },
-];
-
-/* =========================================================
-   SUMMARY CARDS
-========================================================= */
-
-const summaryCards: SummaryCard[] = [
-  {
-    title: "Strong Foundation",
-    description:
-      "Building a strong foundation in programming, databases, computer science and software development.",
-    icon: <FaBookOpen />,
-    iconClass:
-      "bg-cyan-400/10 text-cyan-400 group-hover:bg-cyan-400/15",
-  },
-
-  {
-    title: "Continuous Learning",
-    description:
-      "Continuously learning modern technologies and improving practical development and problem-solving skills.",
-    icon: <FaGraduationCap />,
-    iconClass:
-      "bg-blue-400/10 text-blue-400 group-hover:bg-blue-400/15",
-  },
-
-  {
-    title: "Practical Development",
-    description:
-      "Applying academic concepts through real-world MERN stack projects and database-driven applications.",
-    icon: <FaLayerGroup />,
-    iconClass:
-      "bg-purple-400/10 text-purple-400 group-hover:bg-purple-400/15",
-  },
-];
-
-/* =========================================================
-   LEARNING AREA COMPONENT
-========================================================= */
-
-const LearningArea = ({
-  children,
-}: LearningAreaProps) => {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-slate-950/50 px-3 py-2 text-xs font-medium text-slate-400 transition duration-300 hover:border-cyan-400/20 hover:bg-cyan-400/5 hover:text-cyan-300">
-      <FaCheckCircle
-        aria-hidden="true"
-        className="shrink-0 text-cyan-400"
-      />
-
-      {children}
-    </span>
-  );
 };
 
-/* =========================================================
-   EDUCATION COMPONENT
-========================================================= */
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: 45,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.7,
+      ease: "easeOut",
+    },
+  },
+};
+
+const nodeVariants: Variants = {
+  hidden: {
+    scale: 0,
+    opacity: 0,
+  },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      duration: 0.45,
+      ease: "easeOut",
+    },
+  },
+};
+
+const educationTopics = [
+  {
+    icon: FaCode,
+    title: "Programming",
+    description:
+      "Strong understanding of programming fundamentals, problem solving and software development concepts.",
+  },
+  {
+    icon: FaDatabase,
+    title: "Databases",
+    description:
+      "Practical experience with database concepts, data modeling and MongoDB-based applications.",
+  },
+  {
+    icon: FaLaptopCode,
+    title: "Software Development",
+    description:
+      "Applying academic concepts to real-world applications using modern development technologies.",
+  },
+];
 
 const Education = () => {
-  const shouldReduceMotion = useReducedMotion();
-
-  const variants = createVariants(
-    Boolean(shouldReduceMotion)
-  );
-
   return (
     <section
       id="education"
       aria-labelledby="education-heading"
-      className="relative overflow-hidden bg-slate-950 px-6 py-24 sm:py-32"
+      className="relative isolate overflow-hidden bg-slate-950 px-6 py-24 sm:py-32"
     >
-      {/* =====================================================
-          BACKGROUND DECORATION
-      ===================================================== */}
+      {/* =========================================================
+          BACKGROUND
+      ========================================================== */}
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-48 top-20 h-96 w-96 rounded-full bg-cyan-500/5 blur-3xl"
-      />
+        className="pointer-events-none absolute inset-0"
+      >
+        <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-cyan-500/[0.04] blur-3xl" />
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-48 bottom-20 h-96 w-96 rounded-full bg-purple-500/5 blur-3xl"
-      />
+        <div className="absolute -left-48 top-1/3 h-[450px] w-[450px] rounded-full bg-blue-500/[0.05] blur-3xl" />
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/[0.02] blur-3xl"
-      />
+        <div className="absolute -right-48 bottom-0 h-[450px] w-[450px] rounded-full bg-purple-500/[0.05] blur-3xl" />
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.04),transparent_35%)]" />
+      </div>
 
       <div className="relative mx-auto max-w-7xl">
-        {/* ===================================================
-            SECTION HEADER
-        =================================================== */}
+
+        {/* =========================================================
+            HEADER
+        ========================================================== */}
 
         <motion.header
-          variants={variants.fadeUp}
+          variants={itemVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{
             once: true,
             amount: 0.2,
           }}
-          className="mx-auto mb-16 max-w-3xl text-center"
+          className="mx-auto mb-20 max-w-3xl text-center"
         >
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">
-            <FaGraduationCap
-              aria-hidden="true"
-              size={13}
-            />
+          {/* Section Label */}
+
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400 shadow-lg shadow-cyan-500/[0.03]">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60" />
+
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
+            </span>
+
+            <FaGraduationCap />
 
             Education
           </div>
 
+          {/* Heading */}
+
           <h2
             id="education-heading"
-            className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
+            className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
           >
             My Academic{" "}
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
               Journey
             </span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">
-            My academic journey has helped me build a
-            strong foundation in computer applications,
-            programming, databases and modern software
-            development.
+          {/* Description */}
+
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">
+            A continuous journey of learning, building and applying
+            computer science concepts to real-world software development.
           </p>
         </motion.header>
 
-        {/* ===================================================
-            TIMELINE
-        =================================================== */}
+        {/* =========================================================
+            EDUCATION TIMELINE
+        ========================================================== */}
 
-        <div
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.08,
+          }}
           className="relative"
-          aria-label="Education timeline"
         >
-          {/* Desktop timeline line */}
+          {/* Desktop Timeline Line */}
 
           <div
             aria-hidden="true"
-            className="absolute bottom-10 left-8 top-10 hidden w-px bg-gradient-to-b from-cyan-400 via-blue-500/40 to-transparent lg:block"
+            className="absolute bottom-16 left-[31px] top-16 hidden w-px bg-gradient-to-b from-cyan-400/70 via-blue-500/30 to-transparent lg:block"
           />
 
-          <div className="space-y-8">
-            {education.map((item, index) => {
-              const isCurrent = index === 0;
+          {/* Timeline Items */}
 
-              return (
-                <motion.article
-                  key={`${item.degree}-${item.institution}`}
-                  variants={variants.slideRight}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{
-                    once: true,
-                    amount: 0.15,
+          <div className="space-y-8 lg:space-y-10">
+            {education.map((item, index) => (
+              <motion.article
+                key={`${item.degree}-${item.institution}`}
+                variants={cardVariants}
+                className="relative lg:pl-24"
+              >
+                {/* =================================================
+                    TIMELINE NODE
+                ================================================== */}
+
+                <motion.div
+                  variants={nodeVariants}
+                  className="absolute left-0 top-9 z-10 hidden lg:flex"
+                >
+                  <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-cyan-400/30 bg-slate-950 shadow-xl shadow-cyan-500/10">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cyan-400/10 text-cyan-400">
+                      <FaGraduationCap size={21} />
+                    </div>
+
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-full border border-cyan-400/10"
+                    />
+                  </div>
+                </motion.div>
+
+                {/* =================================================
+                    CARD
+                ================================================== */}
+
+                <motion.div
+                  whileHover={{
+                    y: -5,
                   }}
                   transition={{
-                    delay: shouldReduceMotion
-                      ? 0
-                      : index * 0.08,
+                    duration: 0.25,
                   }}
-                  className="relative lg:pl-20"
+                  className="group relative overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.025] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:border-cyan-400/25 hover:bg-white/[0.045] sm:p-9"
                 >
-                  {/* =========================================
-                      TIMELINE NODE
-                  ========================================= */}
+                  {/* Card Glow */}
 
-                  <motion.div
-                    variants={variants.scale}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{
-                      once: true,
-                    }}
-                    className="absolute left-0 top-8 hidden lg:flex"
-                  >
-                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-cyan-400/30 bg-slate-950 text-cyan-400 shadow-lg shadow-cyan-500/10">
-                      <FaGraduationCap
-                        aria-hidden="true"
-                        size={23}
-                      />
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-28 -top-28 h-64 w-64 rounded-full bg-cyan-400/[0.04] blur-3xl transition duration-500 group-hover:bg-cyan-400/[0.09]"
+                  />
 
-                      {!shouldReduceMotion && (
-                        <span
-                          aria-hidden="true"
-                          className="absolute inset-0 animate-ping rounded-full border border-cyan-400/10"
-                        />
-                      )}
-                    </div>
-                  </motion.div>
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-transparent via-cyan-400 to-transparent transition-all duration-500 group-hover:w-full"
+                  />
 
-                  {/* =========================================
-                      EDUCATION CARD
-                  ========================================= */}
+                  <div className="relative">
 
-                  <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-7 shadow-xl shadow-black/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-white/[0.05] sm:p-8">
-                    {/* Card glow */}
+                    {/* =================================================
+                        TOP SECTION
+                    ================================================== */}
 
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-cyan-400/5 blur-3xl transition duration-500 group-hover:bg-cyan-400/10"
-                    />
+                    <div className="flex flex-col gap-7 lg:flex-row lg:items-start lg:justify-between">
 
-                    {/* Top content */}
+                      {/* Left */}
 
-                    <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                       <div className="min-w-0">
-                        {/* Current badge */}
 
-                        {isCurrent && (
-                          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/5 px-3 py-1.5 text-xs font-semibold text-emerald-400">
-                            <span
-                              aria-hidden="true"
-                              className="h-2 w-2 animate-pulse rounded-full bg-emerald-400"
-                            />
+                        {/* Status */}
+
+                        {index === 0 && (
+                          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1.5 text-xs font-semibold text-emerald-400">
+                            <span className="relative flex h-2 w-2">
+                              <span className="absolute h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+
+                              <span className="relative h-2 w-2 rounded-full bg-emerald-400" />
+                            </span>
 
                             Currently Pursuing
                           </div>
@@ -365,152 +275,221 @@ const Education = () => {
 
                         {/* Institution */}
 
-                        <p className="mt-3 flex items-center gap-2 font-medium text-cyan-400">
-                          <FaUniversity
-                            aria-hidden="true"
-                            className="shrink-0"
-                          />
+                        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+                          <span className="flex items-center gap-2 text-sm font-semibold text-cyan-400 sm:text-base">
+                            <FaUniversity />
 
-                          <span>
                             {item.institution}
                           </span>
-                        </p>
+                        </div>
 
                         {/* Duration */}
 
-                        <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
-                          <FaCalendarAlt
-                            aria-hidden="true"
-                            className="shrink-0"
-                          />
+                        <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+                          <FaCalendarAlt />
 
                           <span>{item.duration}</span>
-                        </p>
+                        </div>
                       </div>
 
-                      {/* Result */}
+                      {/* =================================================
+                          RESULT
+                      ================================================== */}
 
                       {item.result && (
-                        <div className="flex w-fit shrink-0 items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/5 px-4 py-2.5 text-sm font-semibold text-cyan-300">
-                          <FaAward
-                            aria-hidden="true"
-                          />
+                        <div className="flex w-fit shrink-0 items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/[0.06] px-4 py-2.5 text-sm font-semibold text-cyan-300">
+                          <FaAward />
 
                           {item.result}
                         </div>
                       )}
                     </div>
 
-                    {/* Description */}
+                    {/* =================================================
+                        DIVIDER
+                    ================================================== */}
 
-                    <div className="relative mt-7 border-t border-white/10 pt-6">
-                      <p className="max-w-4xl text-sm leading-8 text-slate-400 sm:text-[15px]">
-                        {item.description}
-                      </p>
-                    </div>
+                    <div className="my-7 h-px bg-gradient-to-r from-white/10 via-white/[0.06] to-transparent" />
 
-                    {/* Learning areas */}
+                    {/* =================================================
+                        DESCRIPTION
+                    ================================================== */}
 
-                    <div className="relative mt-6 flex flex-wrap gap-2">
-                      {learningAreas.map((area) => (
-                        <LearningArea
-                          key={area.label}
+                    <p className="max-w-4xl text-sm leading-8 text-slate-400 sm:text-[15px]">
+                      {item.description}
+                    </p>
+
+                    {/* =================================================
+                        SKILL TAGS
+                    ================================================== */}
+
+                    <div className="mt-7 flex flex-wrap gap-2.5">
+                      {[
+                        "Programming",
+                        "Computer Science",
+                        "Software Development",
+                      ].map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.08] bg-slate-950/60 px-3 py-2 text-xs font-medium text-slate-400 transition hover:border-cyan-400/20 hover:text-cyan-400"
                         >
-                          {area.label}
-                        </LearningArea>
+                          <FaCheckCircle className="text-cyan-400" />
+
+                          {tag}
+                        </span>
                       ))}
                     </div>
-
-                    {/* Bottom accent */}
-
-                    <div
-                      aria-hidden="true"
-                      className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500 group-hover:w-full"
-                    />
                   </div>
-                </motion.article>
-              );
-            })}
+                </motion.div>
+              </motion.article>
+            ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* ===================================================
-            EDUCATION SUMMARY
-        =================================================== */}
+        {/* =========================================================
+            LEARNING AREAS
+        ========================================================== */}
 
         <motion.div
-          variants={variants.fadeUp}
+          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{
             once: true,
             amount: 0.15,
           }}
-          className="mt-10 grid gap-5 md:grid-cols-3"
+          className="mt-12 grid gap-5 md:grid-cols-3"
         >
-          {summaryCards.map((card) => (
-            <div
-              key={card.title}
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-white/[0.05]"
-            >
-              <div
-                className={`mb-5 flex h-11 w-11 items-center justify-center rounded-xl transition duration-300 group-hover:scale-105 ${card.iconClass}`}
+          {educationTopics.map((topic) => {
+            const Icon = topic.icon;
+
+            return (
+              <motion.div
+                key={topic.title}
+                variants={itemVariants}
+                whileHover={{
+                  y: -5,
+                }}
+                className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025] p-6 backdrop-blur-xl transition duration-300 hover:border-cyan-400/25 hover:bg-white/[0.045]"
               >
-                {card.icon}
-              </div>
+                {/* Glow */}
 
-              <h4 className="text-lg font-semibold text-white">
-                {card.title}
-              </h4>
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-cyan-400/[0.04] blur-2xl transition group-hover:bg-cyan-400/[0.08]"
+                />
 
-              <p className="mt-3 text-sm leading-7 text-slate-500">
-                {card.description}
-              </p>
-            </div>
-          ))}
+                {/* Icon */}
+
+                <div className="relative mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.07] text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:border-cyan-400/20">
+                  <Icon size={18} />
+                </div>
+
+                {/* Content */}
+
+                <h4 className="relative text-lg font-bold text-white">
+                  {topic.title}
+                </h4>
+
+                <p className="relative mt-3 text-sm leading-7 text-slate-500">
+                  {topic.description}
+                </p>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
-        {/* ===================================================
-            CTA
-        =================================================== */}
+        {/* =========================================================
+            LEARNING PHILOSOPHY
+        ========================================================== */}
 
         <motion.div
-          variants={variants.fadeUp}
-          initial="hidden"
-          whileInView="visible"
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
           viewport={{
             once: true,
             amount: 0.2,
           }}
-          className="mt-10 flex flex-col items-center justify-between gap-5 rounded-3xl border border-cyan-400/10 bg-gradient-to-r from-cyan-400/[0.03] via-white/[0.02] to-blue-500/[0.03] p-7 text-center sm:flex-row sm:text-left"
+          transition={{
+            duration: 0.65,
+            ease: "easeOut",
+          }}
+          className="relative mt-12 overflow-hidden rounded-3xl border border-cyan-400/10 bg-gradient-to-r from-cyan-400/[0.04] via-blue-500/[0.025] to-purple-500/[0.04] p-7 sm:p-9"
         >
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-cyan-400">
-              Always Learning
-            </p>
+          {/* Decorative Glow */}
 
-            <h3 className="mt-1 text-xl font-bold text-white sm:text-2xl">
-              Education is just the beginning.
-            </h3>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 h-32 w-64 -translate-x-1/2 rounded-full bg-cyan-400/[0.06] blur-3xl"
+          />
 
-            <p className="mt-2 text-sm text-slate-500">
-              Exploring new technologies and turning
-              knowledge into practical solutions.
-            </p>
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+            <div className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
+                Learning Philosophy
+              </p>
+
+              <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+                Learn. Build. Improve. Repeat.
+              </h3>
+
+              <p className="mt-3 text-sm leading-7 text-slate-400">
+                I believe education becomes valuable when knowledge is
+                converted into practical experience. Every project gives me
+                an opportunity to strengthen my skills and learn something new.
+              </p>
+            </div>
+
+            {/* CTA */}
+
+            <a
+              href="#skills"
+              className="group inline-flex w-fit shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:border-cyan-400/30 hover:bg-cyan-400/[0.08] hover:text-cyan-400"
+            >
+              Explore My Skills
+
+              <FaArrowRight
+                size={13}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </a>
           </div>
+        </motion.div>
 
-          <a
-            href="#skills"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
-          >
-            Explore My Skills
+        {/* =========================================================
+            BOTTOM STATEMENT
+        ========================================================== */}
 
-            <FaArrowRight
-              aria-hidden="true"
-              size={13}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </a>
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.7,
+            delay: 0.1,
+          }}
+          className="mt-10 text-center"
+        >
+          <p className="text-sm text-slate-600">
+            Academic knowledge{" "}
+            <span className="mx-2 text-cyan-400">+</span>{" "}
+            Practical development{" "}
+            <span className="mx-2 text-cyan-400">+</span>{" "}
+            Continuous learning
+          </p>
         </motion.div>
       </div>
     </section>

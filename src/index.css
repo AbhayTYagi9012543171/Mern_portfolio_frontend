@@ -1,60 +1,202 @@
 @import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
+/* =========================================================
+   DESIGN TOKENS
+========================================================= */
+
+:root {
+  --color-bg-light: #f8fafc;
+  --color-surface-light: #ffffff;
+  --color-text-light: #0f172a;
+  --color-muted-light: #64748b;
+  --color-border-light: rgba(15, 23, 42, 0.08);
+
+  --color-bg-dark: #020617;
+  --color-surface-dark: rgba(255, 255, 255, 0.04);
+  --color-text-dark: #f8fafc;
+  --color-muted-dark: #94a3b8;
+  --color-border-dark: rgba(255, 255, 255, 0.08);
+
+  --color-primary: #22d3ee;
+  --color-primary-dark: #06b6d4;
+  --color-secondary: #3b82f6;
+  --color-accent: #9333ea;
+
+  --container-width: 1280px;
+  --header-height: 80px;
+
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
 }
 
-* {
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  margin: 0;
 
   font-family:
     Inter,
+    ui-sans-serif,
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
 
+  background: var(--color-bg-light);
+  color: var(--color-text-light);
+
   overflow-x: hidden;
 
-  background: #f8fafc;
-  color: #0f172a;
-
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color var(--transition-normal) ease,
+    color var(--transition-normal) ease;
 }
 
-/* =========================
+/* =========================================================
    DARK MODE
-========================= */
+========================================================= */
+
+html.dark {
+  color-scheme: dark;
+}
 
 html.dark body {
-  background: #020617;
-  color: #f8fafc;
+  background: var(--color-bg-dark);
+  color: var(--color-text-dark);
 }
 
-/* =========================
-   SELECTION
-========================= */
+/* =========================================================
+   ROOT APPLICATION
+========================================================= */
+
+#root {
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================================
+   IMAGES
+========================================================= */
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   TEXT SELECTION
+========================================================= */
 
 ::selection {
   background: rgba(34, 211, 238, 0.3);
-  color: white;
+  color: #ffffff;
 }
 
-/* =========================
-   SCROLLBAR
-========================= */
+::-moz-selection {
+  background: rgba(34, 211, 238, 0.3);
+  color: #ffffff;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section {
+  scroll-margin-top: var(--header-height);
+}
+
+/* =========================================================
+   CUSTOM SCROLLBAR
+========================================================= */
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+html.dark {
+  scrollbar-color: #334155 #020617;
+}
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -62,12 +204,13 @@ html.dark body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
   border-radius: 999px;
+  background: #94a3b8;
+  border: 2px solid #e2e8f0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #22d3ee;
+  background: var(--color-primary);
 }
 
 html.dark ::-webkit-scrollbar-track {
@@ -76,58 +219,76 @@ html.dark ::-webkit-scrollbar-track {
 
 html.dark ::-webkit-scrollbar-thumb {
   background: #334155;
+  border-color: #020617;
 }
 
-/* =========================
-   SECTION
-========================= */
-
-section {
-  scroll-margin-top: 80px;
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
-/* =========================
-   GLASS
-========================= */
+/* =========================================================
+   GLASS MORPHISM
+========================================================= */
 
 .glass {
   background: rgba(15, 23, 42, 0.04);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--color-border-light);
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
   transition:
-    background 0.3s ease,
-    border-color 0.3s ease;
+    background-color var(--transition-normal) ease,
+    border-color var(--transition-normal) ease,
+    box-shadow var(--transition-normal) ease;
 }
 
 html.dark .glass {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--color-surface-dark);
+  border-color: var(--color-border-dark);
+}
+
+/* =========================================================
+   GLASS STRONG
+========================================================= */
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+html.dark .glass-strong {
+  background: rgba(15, 23, 42, 0.65);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* =========================
+/* =========================================================
    GRADIENT TEXT
-========================= */
+========================================================= */
 
 .gradient-text {
   background: linear-gradient(
     90deg,
-    #06b6d4,
-    #3b82f6,
-    #9333ea
+    var(--color-primary-dark),
+    var(--color-secondary),
+    var(--color-accent)
   );
 
+  background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
 
   color: transparent;
+
+  animation: gradientMove 6s ease infinite;
 }
 
-/* =========================
-   GLOW
-========================= */
+/* =========================================================
+   PRIMARY GLOW
+========================================================= */
 
 .cyan-glow {
   box-shadow:
@@ -135,9 +296,15 @@ html.dark .glass {
     0 0 80px rgba(34, 211, 238, 0.06);
 }
 
-/* =========================
+.cyan-glow-strong {
+  box-shadow:
+    0 0 25px rgba(34, 211, 238, 0.2),
+    0 0 70px rgba(34, 211, 238, 0.1);
+}
+
+/* =========================================================
    GRID BACKGROUND
-========================= */
+========================================================= */
 
 .grid-background {
   background-image:
@@ -167,9 +334,27 @@ html.dark .grid-background {
     );
 }
 
-/* =========================
-   FLOATING ANIMATION
-========================= */
+/* =========================================================
+   RADIAL BACKGROUND
+========================================================= */
+
+.radial-background {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(34, 211, 238, 0.08),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(59, 130, 246, 0.08),
+      transparent 35%
+    );
+}
+
+/* =========================================================
+   FLOAT ANIMATION
+========================================================= */
 
 @keyframes float {
   0%,
@@ -186,9 +371,9 @@ html.dark .grid-background {
   animation: float 4s ease-in-out infinite;
 }
 
-/* =========================
+/* =========================================================
    GRADIENT ANIMATION
-========================= */
+========================================================= */
 
 @keyframes gradientMove {
   0% {
@@ -209,14 +394,36 @@ html.dark .grid-background {
   animation: gradientMove 6s ease infinite;
 }
 
-/* =========================
+/* =========================================================
+   PULSE GLOW
+========================================================= */
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* =========================================================
    BUTTON
-========================= */
+========================================================= */
 
 .button-glow {
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+    transform var(--transition-normal) ease,
+    box-shadow var(--transition-normal) ease,
+    background-color var(--transition-normal) ease;
 }
 
 .button-glow:hover {
@@ -226,54 +433,170 @@ html.dark .grid-background {
     0 12px 30px rgba(34, 211, 238, 0.2);
 }
 
-/* =========================
+.button-glow:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
    CARD
-========================= */
+========================================================= */
 
 .card-hover {
   transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    background 0.3s ease;
+    transform var(--transition-normal) ease,
+    border-color var(--transition-normal) ease,
+    background-color var(--transition-normal) ease,
+    box-shadow var(--transition-normal) ease;
 }
 
 .card-hover:hover {
   transform: translateY(-6px);
+
   border-color: rgba(34, 211, 238, 0.3);
+
   background: rgba(15, 23, 42, 0.06);
+
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.08);
 }
 
 html.dark .card-hover:hover {
   background: rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.25);
 }
 
-/* =========================
-   IMAGES
-========================= */
+/* =========================================================
+   HOVER UNDERLINE
+========================================================= */
 
-img {
-  max-width: 100%;
-  display: block;
+.hover-underline {
+  position: relative;
 }
 
-/* =========================
-   LINKS
-========================= */
+.hover-underline::after {
+  content: "";
 
-a {
-  text-decoration: none;
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+
+  width: 0;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: var(--color-primary);
+
+  transition: width var(--transition-normal) ease;
 }
 
-/* =========================
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container-custom {
+  width: min(
+    100% - 3rem,
+    var(--container-width)
+  );
+
+  margin-inline: auto;
+}
+
+/* =========================================================
+   PAGE TRANSITION
+========================================================= */
+
+.page-transition {
+  animation: pageFadeIn 0.5s ease both;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 640px) {
+  :root {
+    --header-height: 70px;
+  }
+
   body {
     font-size: 15px;
   }
 
   section {
     scroll-margin-top: 70px;
+  }
+
+  .container-custom {
+    width: min(
+      100% - 2rem,
+      var(--container-width)
+    );
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container-custom {
+    width: min(
+      100% - 3rem,
+      var(--container-width)
+    );
+  }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }
