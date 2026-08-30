@@ -23,9 +23,6 @@ import {
   FaRocket,
   FaCheckCircle,
   FaChevronDown,
-  FaCircle,
-  FaEye,
-  FaBolt,
 } from "react-icons/fa";
 
 import api from "../../services/api";
@@ -134,12 +131,23 @@ const fallbackProjects: Project[] = [
 ========================================================= */
 
 const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [error, setError] = useState("");
-  const [showAll, setShowAll] = useState(false);
+  const [projects, setProjects] =
+    useState<Project[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [search, setSearch] =
+    useState("");
+
+  const [category, setCategory] =
+    useState("All");
+
+  const [error, setError] =
+    useState("");
+
+  const [showAll, setShowAll] =
+    useState(false);
 
   /* =======================================================
      FETCH PROJECTS
@@ -153,9 +161,11 @@ const Projects = () => {
         setLoading(true);
         setError("");
 
-        const response = await api.get("/projects");
+        const response =
+          await api.get("/projects");
 
-        const data = response.data?.data;
+        const data =
+          response.data?.data;
 
         if (
           mounted &&
@@ -213,7 +223,8 @@ const Projects = () => {
   ======================================================= */
 
   const filteredProjects = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const query =
+      search.trim().toLowerCase();
 
     return projects.filter((project) => {
       const matchesSearch =
@@ -287,107 +298,128 @@ const Projects = () => {
   return (
     <section
       id="projects"
-      className="relative overflow-hidden bg-slate-950 px-4 py-24 sm:px-6 sm:py-28 lg:py-36"
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-slate-950
+        px-3
+        py-20
+        sm:px-5
+        sm:py-24
+        md:px-6
+        md:py-28
+        lg:py-32
+      "
     >
       {/* ===================================================
-          CINEMATIC BACKGROUND
+          BACKGROUND
       =================================================== */}
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-      >
-        {/* Main cyan aura */}
-
-        <motion.div
-          animate={{
-            scale: [1, 1.08, 1],
-            opacity: [0.05, 0.08, 0.05],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute left-1/2 top-[-12rem] h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-cyan-500 blur-[150px]"
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="
+            absolute
+            left-1/2
+            top-0
+            h-[260px]
+            w-[260px]
+            -translate-x-1/2
+            rounded-full
+            bg-cyan-500/[0.06]
+            blur-[90px]
+            sm:h-[380px]
+            sm:w-[380px]
+            sm:blur-[110px]
+            md:h-[500px]
+            md:w-[500px]
+            md:blur-[120px]
+          "
         />
 
-        {/* Left blue aura */}
-
-        <motion.div
-          animate={{
-            x: [0, 30, 0],
-            y: [0, 25, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -left-52 top-1/3 h-[30rem] w-[30rem] rounded-full bg-blue-600/[0.045] blur-[130px]"
+        <div
+          className="
+            absolute
+            -left-32
+            top-1/3
+            h-64
+            w-64
+            rounded-full
+            bg-blue-500/[0.05]
+            blur-[90px]
+            sm:-left-40
+            sm:h-80
+            sm:w-80
+            md:h-96
+            md:w-96
+            md:blur-[110px]
+          "
         />
 
-        {/* Right purple aura */}
-
-        <motion.div
-          animate={{
-            x: [0, -25, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -right-52 bottom-0 h-[30rem] w-[30rem] rounded-full bg-purple-600/[0.045] blur-[130px]"
+        <div
+          className="
+            absolute
+            -right-32
+            bottom-0
+            h-64
+            w-64
+            rounded-full
+            bg-purple-500/[0.05]
+            blur-[90px]
+            sm:-right-40
+            sm:h-80
+            sm:w-80
+            md:h-96
+            md:w-96
+            md:blur-[110px]
+          "
         />
-
-        {/* Grid */}
 
         <div
           className="absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.7) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
+              "linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)",
+            backgroundSize:
+              "40px 40px",
           }}
         />
-
-        {/* Radial fade */}
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.35)_70%,rgba(2,6,23,0.75)_100%)]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl">
-
+      <div
+        className="
+          relative
+          mx-auto
+          w-full
+          max-w-7xl
+        "
+      >
         {/* =================================================
-            HEADER
+            SECTION HEADER
         ================================================= */}
 
         <SectionHeader
           eyebrow="Selected Work"
           title={
             <>
-              Building digital experiences
-              <br />
-
-              <span className="bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                that actually solve problems.
+              Projects that turn{" "}
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                ideas into products
               </span>
             </>
           }
-          description="A curated collection of full-stack applications, experiments and production-focused projects crafted with modern technologies, thoughtful architecture and attention to detail."
+          description="A collection of full-stack applications, experiments and production-focused projects built with modern technologies."
         />
 
         {/* =================================================
-            STATS
+            PROJECT OVERVIEW STATS
         ================================================= */}
 
         {!loading && (
           <motion.div
             initial={{
               opacity: 0,
-              y: 25,
+              y: 20,
             }}
             whileInView={{
               opacity: 1,
@@ -398,9 +430,20 @@ const Projects = () => {
               amount: 0.2,
             }}
             transition={{
-              duration: 0.6,
+              duration: 0.5,
             }}
-            className="mx-auto mb-14 grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-4"
+            className="
+              mx-auto
+              mb-10
+              grid
+              w-full
+              max-w-4xl
+              grid-cols-2
+              gap-2.5
+              sm:mb-12
+              sm:grid-cols-4
+              sm:gap-3
+            "
           >
             <OverviewStat
               icon={<FaLayerGroup />}
@@ -434,15 +477,15 @@ const Projects = () => {
             />
 
             <OverviewStat
-              icon={<FaBolt />}
-              value="∞"
-              label="Ideas"
+              icon={<FaStar />}
+              value="100%"
+              label="Passion"
             />
           </motion.div>
         )}
 
         {/* =================================================
-            FILTER / SEARCH
+            FILTER PANEL
         ================================================= */}
 
         {!loading && (
@@ -456,20 +499,55 @@ const Projects = () => {
               y: 0,
             }}
             transition={{
-              duration: 0.55,
+              duration: 0.5,
             }}
-            className="relative mb-12 overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-5"
+            className="
+              mb-8
+              w-full
+              rounded-2xl
+              border
+              border-white/10
+              bg-white/[0.025]
+              p-3
+              backdrop-blur-xl
+              sm:mb-10
+              sm:rounded-3xl
+              sm:p-4
+              md:p-5
+            "
           >
-            {/* Filter glow */}
-
-            <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 rounded-full bg-cyan-400/[0.05] blur-3xl" />
-
-            <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-
+            <div
+              className="
+                flex
+                w-full
+                flex-col
+                gap-4
+                lg:flex-row
+                lg:items-center
+                lg:justify-between
+              "
+            >
               {/* Search */}
 
-              <div className="relative w-full lg:max-w-lg">
-                <FaSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-500" />
+              <div
+                className="
+                  relative
+                  w-full
+                  lg:max-w-md
+                "
+              >
+                <FaSearch
+                  className="
+                    pointer-events-none
+                    absolute
+                    left-3.5
+                    top-1/2
+                    -translate-y-1/2
+                    text-sm
+                    text-slate-500
+                    sm:left-4
+                  "
+                />
 
                 <input
                   type="search"
@@ -480,9 +558,30 @@ const Projects = () => {
                     );
                     setShowAll(false);
                   }}
-                  placeholder="Search projects, technologies, features..."
+                  placeholder="Search projects, technologies..."
                   aria-label="Search projects"
-                  className="h-13 w-full rounded-xl border border-white/10 bg-slate-950/70 pl-11 pr-11 text-sm text-white outline-none transition-all placeholder:text-slate-600 focus:border-cyan-400/40 focus:bg-slate-950 focus:ring-4 focus:ring-cyan-400/[0.06]"
+                  className="
+                    h-11
+                    w-full
+                    min-w-0
+                    rounded-xl
+                    border
+                    border-white/10
+                    bg-slate-900/70
+                    pl-10
+                    pr-10
+                    text-xs
+                    text-white
+                    outline-none
+                    transition
+                    placeholder:text-slate-600
+                    focus:border-cyan-400/40
+                    focus:ring-2
+                    focus:ring-cyan-400/10
+                    sm:h-12
+                    sm:pl-11
+                    sm:text-sm
+                  "
                 />
 
                 {search && (
@@ -492,7 +591,23 @@ const Projects = () => {
                       setSearch("")
                     }
                     aria-label="Clear project search"
-                    className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-500 transition hover:bg-white/10 hover:text-white"
+                    className="
+                      absolute
+                      right-2
+                      top-1/2
+                      flex
+                      h-8
+                      w-8
+                      -translate-y-1/2
+                      items-center
+                      justify-center
+                      rounded-lg
+                      text-slate-500
+                      transition
+                      hover:bg-white/10
+                      hover:text-white
+                      sm:right-3
+                    "
                   >
                     <FaTimes size={12} />
                   </button>
@@ -501,71 +616,105 @@ const Projects = () => {
 
               {/* Categories */}
 
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="mr-1 hidden items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600 xl:flex">
-                  <FaFilter />
-                  Filter
-                </div>
+              <div
+                className="
+                  w-full
+                  overflow-x-auto
+                  pb-1
+                  lg:w-auto
+                  lg:max-w-[55%]
+                  lg:overflow-visible
+                "
+              >
+                <div
+                  className="
+                    flex
+                    min-w-max
+                    items-center
+                    gap-2
+                  "
+                >
+                  <div
+                    className="
+                      mr-1
+                      hidden
+                      items-center
+                      gap-2
+                      text-xs
+                      font-semibold
+                      uppercase
+                      tracking-wider
+                      text-slate-600
+                      lg:flex
+                    "
+                  >
+                    <FaFilter />
+                    Filter
+                  </div>
 
-                {categories.map(
-                  (item) => {
-                    const active =
-                      category === item;
+                  {categories.map(
+                    (item) => {
+                      const active =
+                        category === item;
 
-                    return (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => {
-                          setCategory(item);
-                          setShowAll(false);
-                        }}
-                        className={`relative overflow-hidden rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-300 ${
-                          active
-                            ? "bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20"
-                            : "border border-white/10 bg-white/[0.025] text-slate-400 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] hover:text-white"
-                        }`}
-                      >
-                        {active && (
-                          <motion.span
-                            layoutId="activeCategory"
-                            className="absolute inset-0 bg-cyan-400"
-                            transition={{
-                              type: "spring",
-                              stiffness: 350,
-                              damping: 30,
-                            }}
-                          />
-                        )}
-
-                        <span className="relative z-10">
+                      return (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => {
+                            setCategory(
+                              item
+                            );
+                            setShowAll(false);
+                          }}
+                          className={`
+                            shrink-0
+                            rounded-xl
+                            px-3
+                            py-2.5
+                            text-[11px]
+                            font-semibold
+                            transition-all
+                            duration-200
+                            sm:px-4
+                            sm:text-xs
+                            ${
+                              active
+                                ? "bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/10"
+                                : "border border-white/10 bg-white/[0.03] text-slate-400 hover:border-cyan-400/30 hover:bg-cyan-400/5 hover:text-white"
+                            }
+                          `}
+                        >
                           {item}
-                        </span>
-                      </button>
-                    );
-                  }
-                )}
+                        </button>
+                      );
+                    }
+                  )}
+                </div>
               </div>
             </div>
 
+            {/* Active filter info */}
+
             {(search ||
               category !== "All") && (
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  height: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                  height: "auto",
-                }}
-                className="relative mt-4 flex flex-wrap items-center gap-3 border-t border-white/5 pt-4"
+              <div
+                className="
+                  mt-4
+                  flex
+                  flex-wrap
+                  items-center
+                  gap-2.5
+                  border-t
+                  border-white/5
+                  pt-4
+                "
               >
                 <span className="text-xs text-slate-600">
-                  Matching results
+                  Results:
                 </span>
 
-                <span className="rounded-lg border border-cyan-400/10 bg-cyan-400/[0.07] px-3 py-1.5 text-xs font-semibold text-cyan-300">
+                <span className="rounded-lg bg-cyan-400/10 px-2.5 py-1.5 text-xs font-medium text-cyan-300">
                   {filteredProjects.length}{" "}
                   project
                   {filteredProjects.length !==
@@ -577,11 +726,11 @@ const Projects = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs font-medium text-slate-500 transition hover:text-cyan-400"
+                  className="text-xs text-slate-500 transition hover:text-cyan-400"
                 >
-                  Reset filters
+                  Clear filters
                 </button>
-              </motion.div>
+              </div>
             )}
           </motion.div>
         )}
@@ -595,19 +744,19 @@ const Projects = () => {
             <motion.div
               initial={{
                 opacity: 0,
-                y: -10,
+                height: 0,
               }}
               animate={{
                 opacity: 1,
-                y: 0,
+                height: "auto",
               }}
               exit={{
                 opacity: 0,
-                y: -10,
+                height: 0,
               }}
-              className="mb-8"
+              className="mb-6 overflow-hidden sm:mb-8"
             >
-              <div className="rounded-2xl border border-yellow-400/10 bg-yellow-400/[0.04] px-5 py-3 text-center text-xs text-yellow-300/80">
+              <div className="rounded-2xl border border-yellow-400/10 bg-yellow-400/[0.04] px-3 py-3 text-center text-[11px] leading-5 text-yellow-300/80 sm:px-4 sm:text-xs">
                 {error}
               </div>
             </motion.div>
@@ -618,10 +767,12 @@ const Projects = () => {
             LOADING
         ================================================= */}
 
-        {loading && <ProjectSkeleton />}
+        {loading && (
+          <ProjectSkeleton />
+        )}
 
         {/* =================================================
-            PROJECTS
+            PROJECT GRID
         ================================================= */}
 
         {!loading && (
@@ -629,9 +780,19 @@ const Projects = () => {
             {visibleProjects.length > 0 ? (
               <motion.div
                 layout
-                className="grid gap-7 md:grid-cols-2 xl:grid-cols-3"
+                className="
+                  grid
+                  w-full
+                  gap-4
+                  sm:gap-5
+                  md:grid-cols-2
+                  md:gap-6
+                  xl:grid-cols-3
+                "
               >
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence
+                  mode="popLayout"
+                >
                   {visibleProjects.map(
                     (
                       project,
@@ -660,7 +821,7 @@ const Projects = () => {
             )}
 
             {/* =================================================
-                SHOW ALL
+                SHOW MORE
             ================================================= */}
 
             {filteredProjects.length >
@@ -668,16 +829,14 @@ const Projects = () => {
               <motion.div
                 initial={{
                   opacity: 0,
-                  y: 15,
                 }}
                 whileInView={{
                   opacity: 1,
-                  y: 0,
                 }}
                 viewport={{
                   once: true,
                 }}
-                className="mt-14 text-center"
+                className="mt-9 text-center sm:mt-12"
               >
                 <button
                   type="button"
@@ -687,31 +846,62 @@ const Projects = () => {
                         !value
                     )
                   }
-                  className="group inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.035] px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-black/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] hover:text-cyan-300 hover:shadow-cyan-500/10"
+                  className="
+                    inline-flex
+                    max-w-full
+                    items-center
+                    justify-center
+                    gap-2.5
+                    rounded-xl
+                    border
+                    border-white/10
+                    bg-white/[0.03]
+                    px-4
+                    py-3
+                    text-xs
+                    font-semibold
+                    text-white
+                    backdrop-blur-xl
+                    transition
+                    hover:border-cyan-400/30
+                    hover:bg-cyan-400/5
+                    hover:text-cyan-400
+                    sm:gap-3
+                    sm:px-6
+                    sm:py-3.5
+                    sm:text-sm
+                  "
                 >
-                  {showAll
-                    ? "Show Less"
-                    : `View All ${filteredProjects.length} Projects`}
+                  <span className="truncate">
+                    {showAll
+                      ? "Show Less"
+                      : `View All ${filteredProjects.length} Projects`}
+                  </span>
 
                   <FaChevronDown
+                    className={`
+                      shrink-0
+                      transition-transform
+                      duration-300
+                      ${
+                        showAll
+                          ? "rotate-180"
+                          : "group-hover:translate-y-1"
+                      }
+                    `}
                     size={10}
-                    className={`transition-transform duration-300 ${
-                      showAll
-                        ? "rotate-180"
-                        : "group-hover:translate-y-1"
-                    }`}
                   />
                 </button>
               </motion.div>
             )}
 
+            {/* Result count */}
+
             {filteredProjects.length >
               0 && (
-              <p className="mt-7 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-slate-700">
+              <p className="mt-5 text-center text-[10px] text-slate-700 sm:mt-7 sm:text-xs">
                 Showing{" "}
-                {
-                  visibleProjects.length
-                }{" "}
+                {visibleProjects.length}{" "}
                 of{" "}
                 {
                   filteredProjects.length
@@ -758,61 +948,80 @@ const SectionHeader = ({
       transition={{
         duration: 0.7,
       }}
-      className="mx-auto mb-16 max-w-4xl text-center"
+      className="
+        mx-auto
+        mb-10
+        w-full
+        max-w-3xl
+        text-center
+        sm:mb-12
+        md:mb-14
+      "
     >
-      {/* Eyebrow */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          scale: 0.92,
-        }}
-        whileInView={{
-          opacity: 1,
-          scale: 1,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 0.45,
-        }}
-        className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/[0.055] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-cyan-400 shadow-lg shadow-cyan-500/5"
+      <div
+        className="
+          mb-4
+          inline-flex
+          max-w-full
+          items-center
+          gap-2
+          rounded-full
+          border
+          border-cyan-400/20
+          bg-cyan-400/[0.06]
+          px-3
+          py-1.5
+          text-[10px]
+          font-semibold
+          uppercase
+          tracking-[0.18em]
+          text-cyan-400
+          sm:mb-5
+          sm:px-4
+          sm:py-2
+          sm:text-xs
+          sm:tracking-[0.22em]
+        "
       >
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inset-0 animate-ping rounded-full bg-cyan-400 opacity-50" />
-
-          <span className="relative h-2 w-2 rounded-full bg-cyan-400" />
-        </span>
+        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" />
 
         {eyebrow}
-      </motion.div>
+      </div>
 
-      {/* Heading */}
-
-      <h2 className="text-4xl font-black leading-[1.05] tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
+      <h2
+        className="
+          break-words
+          text-3xl
+          font-bold
+          leading-[1.15]
+          tracking-tight
+          text-white
+          sm:text-4xl
+          md:text-5xl
+          lg:text-6xl
+        "
+      >
         {title}
       </h2>
 
-      {/* Description */}
-
-      <p className="mx-auto mt-7 max-w-2xl text-sm leading-8 text-slate-400 sm:text-base">
+      <p
+        className="
+          mx-auto
+          mt-5
+          max-w-2xl
+          px-1
+          text-xs
+          leading-6
+          text-slate-400
+          sm:mt-6
+          sm:text-sm
+          sm:leading-7
+          md:text-base
+          md:leading-8
+        "
+      >
         {description}
       </p>
-
-      {/* Decorative divider */}
-
-      <div className="mx-auto mt-9 flex items-center justify-center gap-3">
-        <span className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-400/50" />
-
-        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50" />
-
-        <span className="h-px w-20 bg-gradient-to-r from-cyan-400/30 to-blue-400/30" />
-
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-400 shadow-lg shadow-blue-400/50" />
-
-        <span className="h-px w-12 bg-gradient-to-l from-transparent to-blue-400/50" />
-      </div>
     </motion.div>
   );
 };
@@ -833,26 +1042,78 @@ const OverviewStat = ({
   label,
 }: OverviewStatProps) => {
   return (
-    <motion.div
-      whileHover={{
-        y: -5,
-      }}
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] p-5 text-center shadow-xl shadow-black/10 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/20 hover:bg-white/[0.045]"
+    <div
+      className="
+        group
+        min-w-0
+        rounded-xl
+        border
+        border-white/10
+        bg-white/[0.025]
+        p-3
+        text-center
+        backdrop-blur-xl
+        transition
+        hover:border-cyan-400/20
+        hover:bg-white/[0.04]
+        sm:rounded-2xl
+        sm:p-4
+      "
     >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-400/[0.03] via-transparent to-blue-500/[0.03] opacity-0 transition duration-300 group-hover:opacity-100" />
-
-      <div className="relative mx-auto flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.07] text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:border-cyan-400/20 group-hover:bg-cyan-400/[0.1]">
+      <div
+        className="
+          mx-auto
+          flex
+          h-8
+          w-8
+          items-center
+          justify-center
+          rounded-lg
+          bg-cyan-400/10
+          text-xs
+          text-cyan-400
+          transition
+          group-hover:scale-110
+          sm:h-9
+          sm:w-9
+          sm:rounded-xl
+          sm:text-sm
+        "
+      >
         {icon}
       </div>
 
-      <p className="relative mt-3 text-xl font-black tracking-tight text-white">
+      <p
+        className="
+          mt-2
+          truncate
+          text-lg
+          font-bold
+          text-white
+          sm:mt-3
+          sm:text-xl
+        "
+      >
         {value}
       </p>
 
-      <p className="relative mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-600">
+      <p
+        className="
+          mt-0.5
+          truncate
+          text-[8px]
+          font-semibold
+          uppercase
+          tracking-[0.08em]
+          text-slate-600
+          sm:mt-1
+          sm:text-[10px]
+          sm:tracking-wider
+        "
+      >
         {label}
       </p>
-    </motion.div>
+    </div>
   );
 };
 
@@ -869,22 +1130,24 @@ const ProjectCard = ({
   project,
   index,
 }: ProjectCardProps) => {
-  const hasLiveDemo = Boolean(
-    project.liveDemo &&
-      project.liveDemo !== "#"
-  );
+  const hasLiveDemo =
+    Boolean(
+      project.liveDemo &&
+        project.liveDemo !== "#"
+    );
 
-  const hasGithub = Boolean(
-    project.github &&
-      project.github !== "#"
-  );
+  const hasGithub =
+    Boolean(
+      project.github &&
+        project.github !== "#"
+    );
 
   return (
     <motion.article
       layout
       initial={{
         opacity: 0,
-        y: 45,
+        y: 35,
       }}
       animate={{
         opacity: 1,
@@ -892,141 +1155,192 @@ const ProjectCard = ({
       }}
       exit={{
         opacity: 0,
-        scale: 0.95,
+        scale: 0.96,
       }}
       transition={{
-        duration: 0.5,
-        delay: index * 0.055,
+        duration: 0.45,
+        delay:
+          index * 0.05,
       }}
       whileHover={{
-        y: -9,
+        y: -6,
       }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.025] shadow-2xl shadow-black/20 backdrop-blur-2xl transition-all duration-500 hover:border-cyan-400/25 hover:bg-white/[0.045] hover:shadow-cyan-500/[0.07]"
+      className="
+        group
+        relative
+        flex
+        h-full
+        min-w-0
+        flex-col
+        overflow-hidden
+        rounded-2xl
+        border
+        border-white/10
+        bg-white/[0.025]
+        backdrop-blur-xl
+        transition-all
+        duration-300
+        hover:border-cyan-400/25
+        hover:bg-white/[0.045]
+        hover:shadow-2xl
+        hover:shadow-cyan-500/[0.06]
+        sm:rounded-3xl
+        md:hover:-translate-y-1
+      "
     >
-      {/* =================================================
-          CARD GLOW
-      ================================================= */}
+      {/* Top accent */}
 
-      <div className="pointer-events-none absolute -right-28 -top-28 h-64 w-64 rounded-full bg-cyan-400/[0.035] blur-3xl transition duration-500 group-hover:bg-cyan-400/[0.09]" />
-
-      <div className="pointer-events-none absolute -bottom-28 -left-28 h-64 w-64 rounded-full bg-blue-500/[0.025] blur-3xl transition duration-500 group-hover:bg-blue-500/[0.07]" />
-
-      {/* Top line */}
-
-      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
+      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       {/* =================================================
-          PROJECT IMAGE
+          CARD TOP
       ================================================= */}
 
-      <div className="relative mx-3 mt-3 overflow-hidden rounded-[1.25rem] border border-white/[0.08] bg-slate-900">
-        {project.image ? (
-          <div className="relative aspect-[16/9] overflow-hidden">
-            <img
-              src={project.image}
-              alt={`${project.title} preview`}
-              loading={
-                index < 3
-                  ? "eager"
-                  : "lazy"
-              }
-              className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-            />
+      <div
+        className="
+          flex
+          min-w-0
+          items-start
+          justify-between
+          gap-2
+          px-4
+          pt-5
+          sm:px-6
+          sm:pt-6
+        "
+      >
+        <span
+          className="
+            min-w-0
+            max-w-[65%]
+            truncate
+            rounded-full
+            border
+            border-cyan-400/20
+            bg-cyan-400/[0.08]
+            px-2.5
+            py-1.5
+            text-[9px]
+            font-bold
+            uppercase
+            tracking-wider
+            text-cyan-300
+            sm:px-3
+            sm:text-[10px]
+          "
+        >
+          {project.category}
+        </span>
 
-            {/* Image overlay */}
-
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent opacity-70" />
-
-            <div className="absolute inset-0 bg-cyan-400/0 transition duration-500 group-hover:bg-cyan-400/[0.035]" />
-
-            {/* Preview badge */}
-
-            <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-slate-300 backdrop-blur-xl">
-              <FaEye
-                size={9}
-                className="text-cyan-400"
-              />
-
-              Project Preview
-            </div>
-
-            {/* Featured */}
-
-            {project.featured && (
-              <div className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-yellow-400/20 bg-slate-950/70 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-300 backdrop-blur-xl">
-                <FaStar size={8} />
-
-                Featured
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex aspect-[16/9] items-center justify-center bg-gradient-to-br from-cyan-400/[0.06] via-slate-900 to-blue-500/[0.06]">
-            <FaCode
-              size={40}
-              className="text-cyan-400/30"
-            />
-          </div>
+        {project.featured && (
+          <span
+            className="
+              inline-flex
+              shrink-0
+              items-center
+              gap-1
+              rounded-full
+              border
+              border-yellow-400/20
+              bg-yellow-400/[0.07]
+              px-2
+              py-1.5
+              text-[8px]
+              font-bold
+              uppercase
+              tracking-wider
+              text-yellow-300
+              sm:gap-1.5
+              sm:px-3
+              sm:text-[10px]
+            "
+          >
+            <FaStar size={8} />
+            <span className="hidden xs:inline sm:inline">
+              Featured
+            </span>
+          </span>
         )}
       </div>
 
       {/* =================================================
-          CONTENT
+          PROJECT CONTENT
       ================================================= */}
 
-      <div className="relative flex flex-1 flex-col p-6 sm:p-7">
-
-        {/* Number + category */}
-
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-cyan-400/50">
-            {String(index + 1).padStart(
-              2,
-              "0"
-            )}
-          </span>
-
-          <div className="h-px flex-1 bg-white/[0.06]" />
-
-          <span className="rounded-full border border-cyan-400/15 bg-cyan-400/[0.055] px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-cyan-300">
-            {project.category}
-          </span>
-        </div>
-
+      <div
+        className="
+          flex
+          min-w-0
+          flex-1
+          flex-col
+          p-4
+          sm:p-6
+        "
+      >
         {/* Title */}
 
-        <div className="flex items-start gap-3">
-          <motion.div
-            whileHover={{
-              rotate: 6,
-              scale: 1.05,
-            }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.07] text-cyan-400 transition group-hover:border-cyan-400/20 group-hover:bg-cyan-400/[0.1]"
+        <div className="flex min-w-0 items-start gap-2.5 sm:gap-3">
+          <div
+            className="
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-xl
+              border
+              border-cyan-400/10
+              bg-cyan-400/[0.07]
+              text-sm
+              text-cyan-400
+              transition
+              duration-300
+              group-hover:scale-105
+              group-hover:bg-cyan-400/10
+              sm:h-11
+              sm:w-11
+              sm:text-base
+            "
           >
-            <FaCode size={17} />
-          </motion.div>
+            <FaCode />
+          </div>
 
-          <div className="min-w-0">
-            <h3 className="text-xl font-black tracking-tight text-white transition duration-300 group-hover:text-cyan-300">
+          <div className="min-w-0 flex-1">
+            <h3
+              className="
+                break-words
+                text-lg
+                font-bold
+                leading-tight
+                text-white
+                sm:text-xl
+              "
+            >
               {project.title}
             </h3>
 
-            <div className="mt-1 flex items-center gap-1.5">
-              <FaCircle
-                size={4}
-                className="text-emerald-400"
-              />
-
-              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-600">
-                Full Stack Application
-              </span>
-            </div>
+            <p className="mt-1 truncate text-[9px] font-semibold uppercase tracking-wider text-slate-600 sm:text-[10px]">
+              Full Stack Project
+            </p>
           </div>
         </div>
 
         {/* Description */}
 
-        <p className="mt-5 text-sm leading-7 text-slate-400">
+        <p
+          className="
+            mt-4
+            min-h-0
+            text-xs
+            leading-6
+            text-slate-400
+            sm:mt-5
+            sm:min-h-[84px]
+            sm:text-sm
+            sm:leading-7
+          "
+        >
           {project.description}
         </p>
 
@@ -1036,16 +1350,12 @@ const ProjectCard = ({
 
         {project.technologies?.length >
           0 && (
-          <div className="mt-6">
-            <div className="mb-3 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+          <div className="mt-5">
+            <p className="mb-2.5 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-600 sm:text-[10px] sm:tracking-[0.18em]">
+              Built With
+            </p>
 
-              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-600">
-                Technology
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {project.technologies
                 .slice(0, 6)
                 .map(
@@ -1054,7 +1364,23 @@ const ProjectCard = ({
                       key={
                         technology
                       }
-                      className="rounded-lg border border-white/[0.08] bg-white/[0.025] px-2.5 py-1.5 text-[10px] font-medium text-slate-300 transition duration-300 group-hover:border-white/[0.12] hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+                      className="
+                        max-w-full
+                        truncate
+                        rounded-lg
+                        border
+                        border-white/10
+                        bg-white/[0.035]
+                        px-2
+                        py-1.5
+                        text-[10px]
+                        font-medium
+                        text-slate-300
+                        transition
+                        group-hover:border-white/15
+                        sm:px-2.5
+                        sm:text-[11px]
+                      "
                     >
                       {technology}
                     </span>
@@ -1063,9 +1389,10 @@ const ProjectCard = ({
 
               {project.technologies
                 .length > 6 && (
-                <span className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2.5 py-1.5 text-[10px] font-medium text-slate-600">
+                <span className="rounded-lg border border-white/10 bg-white/[0.02] px-2 py-1.5 text-[10px] text-slate-600 sm:px-2.5 sm:text-[11px]">
                   +
-                  {project.technologies
+                  {project
+                    .technologies
                     .length -
                     6}
                 </span>
@@ -1080,16 +1407,12 @@ const ProjectCard = ({
 
         {project.features?.length >
           0 && (
-          <div className="mt-6">
-            <div className="mb-3 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+          <div className="mt-5 sm:mt-6">
+            <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-600 sm:text-[10px] sm:tracking-[0.18em]">
+              Key Features
+            </p>
 
-              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-600">
-                Key Capabilities
-              </p>
-            </div>
-
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-1">
               {project.features
                 .slice(0, 4)
                 .map(
@@ -1098,13 +1421,19 @@ const ProjectCard = ({
                       key={
                         feature
                       }
-                      className="flex items-center gap-2.5 text-xs text-slate-400"
+                      className="
+                        flex
+                        min-w-0
+                        items-start
+                        gap-2
+                        text-[11px]
+                        text-slate-400
+                        sm:text-xs
+                      "
                     >
-                      <FaCheckCircle
-                        className="shrink-0 text-[10px] text-cyan-400/70"
-                      />
+                      <FaCheckCircle className="mt-0.5 shrink-0 text-[9px] text-cyan-400/70 sm:text-[10px]" />
 
-                      <span className="truncate transition group-hover:text-slate-300">
+                      <span className="min-w-0 break-words leading-5 sm:leading-normal">
                         {feature}
                       </span>
                     </div>
@@ -1118,12 +1447,19 @@ const ProjectCard = ({
             LINKS
         ================================================= */}
 
-        <div className="mt-auto pt-7">
-          <div className="border-t border-white/[0.07] pt-5">
-
+        <div className="mt-auto pt-6 sm:pt-7">
+          <div className="border-t border-white/10 pt-4 sm:pt-5">
             {hasLiveDemo ||
             hasGithub ? (
-              <div className="flex gap-3">
+              <div
+                className="
+                  flex
+                  flex-col
+                  gap-2
+                  min-[400px]:flex-row
+                  sm:gap-3
+                "
+              >
                 {hasLiveDemo && (
                   <a
                     href={
@@ -1131,17 +1467,33 @@ const ProjectCard = ({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/live inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 py-3 text-xs font-bold text-slate-950 shadow-lg shadow-cyan-500/10 transition duration-300 hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-cyan-400/20"
+                    className="
+                      group/live
+                      inline-flex
+                      min-h-[44px]
+                      flex-1
+                      items-center
+                      justify-center
+                      gap-2
+                      rounded-xl
+                      bg-cyan-400
+                      px-3
+                      py-3
+                      text-[11px]
+                      font-bold
+                      text-slate-950
+                      transition
+                      hover:bg-cyan-300
+                      hover:shadow-lg
+                      hover:shadow-cyan-500/20
+                      sm:text-xs
+                    "
                   >
-                    <FaExternalLinkAlt
-                      size={9}
-                    />
-
                     Live Demo
 
-                    <FaArrowRight
+                    <FaExternalLinkAlt
                       size={9}
-                      className="transition group-hover/live:translate-x-1"
+                      className="transition-transform group-hover/live:translate-x-0.5 sm:text-[10px]"
                     />
                   </a>
                 )}
@@ -1153,25 +1505,38 @@ const ProjectCard = ({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/github inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3 text-xs font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+                    className="
+                      inline-flex
+                      min-h-[44px]
+                      flex-1
+                      items-center
+                      justify-center
+                      gap-2
+                      rounded-xl
+                      border
+                      border-white/10
+                      bg-white/[0.04]
+                      px-3
+                      py-3
+                      text-[11px]
+                      font-bold
+                      text-white
+                      transition
+                      hover:border-cyan-400/30
+                      hover:bg-cyan-400/[0.05]
+                      hover:text-cyan-400
+                      sm:text-xs
+                    "
                   >
-                    <FaGithub
-                      size={13}
-                    />
+                    <FaGithub />
 
-                    GitHub
-
-                    <FaArrowRight
-                      size={9}
-                      className="opacity-0 transition group-hover/github:translate-x-1 group-hover/github:opacity-100"
-                    />
+                    Source Code
                   </a>
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3 text-xs font-medium text-slate-600">
+              <div className="flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.025] px-3 py-3 text-center text-[10px] font-medium text-slate-600 sm:text-xs">
                 <FaCode size={10} />
-
                 Project links coming soon
               </div>
             )}
@@ -1188,64 +1553,69 @@ const ProjectCard = ({
 
 const ProjectSkeleton = () => {
   return (
-    <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+    <div
+      className="
+        grid
+        gap-4
+        sm:gap-5
+        md:grid-cols-2
+        md:gap-6
+        xl:grid-cols-3
+      "
+    >
       {Array.from({
         length: 6,
       }).map((_, index) => (
-        <motion.div
+        <div
           key={index}
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-          }}
-          className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.025] p-3"
+          className="
+            min-w-0
+            animate-pulse
+            rounded-2xl
+            border
+            border-white/10
+            bg-white/[0.025]
+            p-4
+            sm:h-[510px]
+            sm:rounded-3xl
+            sm:p-6
+          "
         >
-          <div className="aspect-[16/9] animate-pulse rounded-[1.25rem] bg-white/[0.035]" />
-
-          <div className="p-4">
-            <div className="h-3 w-20 animate-pulse rounded bg-white/5" />
-
-            <div className="mt-5 flex gap-3">
-              <div className="h-11 w-11 animate-pulse rounded-xl bg-white/5" />
-
-              <div className="flex-1 space-y-2">
-                <div className="h-5 w-2/3 animate-pulse rounded bg-white/5" />
-
-                <div className="h-3 w-1/3 animate-pulse rounded bg-white/5" />
-              </div>
-            </div>
-
-            <div className="mt-6 space-y-2">
-              <div className="h-3 animate-pulse rounded bg-white/5" />
-
-              <div className="h-3 animate-pulse rounded bg-white/5" />
-
-              <div className="h-3 w-4/5 animate-pulse rounded bg-white/5" />
-            </div>
-
-            <div className="mt-7 flex flex-wrap gap-2">
-              <div className="h-7 w-20 animate-pulse rounded-lg bg-white/5" />
-
-              <div className="h-7 w-24 animate-pulse rounded-lg bg-white/5" />
-
-              <div className="h-7 w-16 animate-pulse rounded-lg bg-white/5" />
-
-              <div className="h-7 w-20 animate-pulse rounded-lg bg-white/5" />
-            </div>
-
-            <div className="mt-7 space-y-2">
-              <div className="h-3 w-2/3 animate-pulse rounded bg-white/5" />
-
-              <div className="h-3 w-1/2 animate-pulse rounded bg-white/5" />
-
-              <div className="h-3 w-3/5 animate-pulse rounded bg-white/5" />
-            </div>
-
-            <div className="mt-7 h-11 animate-pulse rounded-xl bg-white/5" />
+          <div className="flex justify-between gap-2">
+            <div className="h-7 w-20 rounded-full bg-white/5 sm:w-24" />
+            <div className="h-7 w-16 rounded-full bg-white/5 sm:w-20" />
           </div>
-        </motion.div>
+
+          <div className="mt-6 flex gap-3 sm:mt-7">
+            <div className="h-10 w-10 shrink-0 rounded-xl bg-white/5 sm:h-11 sm:w-11" />
+
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="h-5 w-2/3 rounded bg-white/5" />
+              <div className="h-3 w-1/3 rounded bg-white/5" />
+            </div>
+          </div>
+
+          <div className="mt-5 space-y-2 sm:mt-6">
+            <div className="h-3 rounded bg-white/5" />
+            <div className="h-3 rounded bg-white/5" />
+            <div className="h-3 w-4/5 rounded bg-white/5" />
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2 sm:mt-7">
+            <div className="h-7 w-16 rounded-lg bg-white/5 sm:w-20" />
+            <div className="h-7 w-20 rounded-lg bg-white/5 sm:w-24" />
+            <div className="h-7 w-14 rounded-lg bg-white/5 sm:w-16" />
+            <div className="h-7 w-16 rounded-lg bg-white/5 sm:w-20" />
+          </div>
+
+          <div className="mt-7 space-y-2 sm:mt-8">
+            <div className="h-3 w-2/3 rounded bg-white/5" />
+            <div className="h-3 w-1/2 rounded bg-white/5" />
+            <div className="h-3 w-3/5 rounded bg-white/5" />
+          </div>
+
+          <div className="mt-7 h-11 rounded-xl bg-white/5 sm:mt-8 sm:h-12" />
+        </div>
       ))}
     </div>
   );
@@ -1266,36 +1636,65 @@ const EmptyState = ({
     <motion.div
       initial={{
         opacity: 0,
-        y: 25,
+        y: 20,
       }}
       animate={{
         opacity: 1,
         y: 0,
       }}
-      className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.025] px-6 py-24 text-center shadow-2xl shadow-black/20 backdrop-blur-xl"
+      className="
+        w-full
+        rounded-2xl
+        border
+        border-white/10
+        bg-white/[0.025]
+        px-4
+        py-16
+        text-center
+        backdrop-blur-xl
+        sm:rounded-3xl
+        sm:px-6
+        sm:py-20
+      "
     >
-      <div className="pointer-events-none absolute left-1/2 top-0 h-48 w-48 -translate-x-1/2 rounded-full bg-cyan-400/[0.05] blur-3xl" />
-
-      <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.07] text-cyan-400">
-        <FaSearch size={21} />
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400 sm:h-16 sm:w-16">
+        <FaSearch size={20} />
       </div>
 
-      <h3 className="relative mt-7 text-xl font-bold text-white">
+      <h3 className="mt-5 text-lg font-bold text-white sm:mt-6 sm:text-xl">
         No projects found
       </h3>
 
-      <p className="relative mx-auto mt-3 max-w-md text-sm leading-7 text-slate-500">
-        We couldn't find any projects matching
-        your current search or category.
+      <p className="mx-auto mt-2 max-w-md text-xs leading-6 text-slate-500 sm:text-sm sm:leading-6">
+        We couldn't find any projects
+        matching your current search or
+        category.
       </p>
 
       <button
         type="button"
         onClick={onClear}
-        className="relative mt-8 inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/10 transition duration-300 hover:-translate-y-1 hover:bg-cyan-300"
+        className="
+          mt-6
+          inline-flex
+          min-h-[44px]
+          items-center
+          gap-2
+          rounded-xl
+          bg-cyan-400
+          px-4
+          py-3
+          text-xs
+          font-bold
+          text-slate-950
+          transition
+          hover:bg-cyan-300
+          sm:mt-7
+          sm:px-5
+          sm:text-sm
+        "
       >
         Reset Filters
-
         <FaArrowRight size={10} />
       </button>
     </motion.div>
